@@ -1,6 +1,78 @@
 package net.jonhopkins.robot;
 
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JScrollBar;
+import javax.swing.JTextField;
+import javax.swing.Timer;
+
 public class Form {
+	JTextField txtNumberBoxes; // Right Justify, Text = "5"
+	JScrollBar hscrRotateX; // Max = 75, SmallChange = 5, LargeChange = 20
+	JTextField txtRotateX; // Right Justify, Text = "0"
+	JScrollBar hscrRotateY; // Max = 360, SmallChange = 5, LargeChange = 20
+	JTextField txtRotateY; // Right Justify, Text = "0"
+	JScrollBar hscrXTranslate; // Min = -15, Max = 15
+	JScrollBar hscrZTranslate; // Min = -20, Max = 20
+	JTextField txtXTranslate; // Right Justify, Text = "0"
+	JTextField txtZTranslate; // Right Justify, Text = "0"
+	JButton cmdOpenRoute; // Caption = "Open"
+	JButton cmdSaveRoute; // Caption = "Save", Enabled = False
+	JButton cmdAutoRobot; // Caption = "AutoGo"
+	JButton cmdClearCurrentRoute; // Caption = "Clear Route"
+	JButton cmdNewRoute; // Caption = "New Route"
+	JCheckBox chkMoves; // Caption = "Teach Route"
+	JButton cmdResetRobot; // Caption = "Reset"
+	Timer tmrResetRobot; // Enabled = False, Interval = 50
+	Timer tmrAutoRobot; // Enabled = False, Interval = 100
+	JTextField txtOpenClaw; // Right Justify, Text = "0"
+	JTextField txtClawRotate; // Right Justify, Text = "90"
+	JTextField txtArm3; // Right Justify, Text = "0"
+	JTextField txtArm2; // Right Justify, Text = "0"
+	JScrollBar hscrClawOpen; // Max = 6
+	JScrollBar hscrClawRotate; // Max = 180, SmallChange = 5, LargeChange = 5
+	JScrollBar hscrArm3; // Min = -20, Max = 200, SmallChange = 5, LargeChange = 5
+	JScrollBar hscrArm2; // Max = 180, SmallChange = 5, LargeChange = 5
+	JScrollBar hscrArm1; // Min = -360, Max = 360, SmallChange = 5, LargeChange = 5
+	JTextField txtArm1; // Right Justify, Text = "0"
+	JButton cmdDrawRobot; // Caption = "Drawz :D"
+// Begin VB.PictureBox pctRobot 
+//    Height          =   9000
+//    Left            =   0
+//    ScaleHeight     =   596
+//    ScaleMode       =   3  'Pixel
+//    ScaleWidth      =   596
+//    TabIndex        =   0
+//    Top             =   0
+//    Width           =   9000
+// End
+	JLabel Label1; // Right Justify, BorderStyle = Fixed Single
+	JLabel Label24; // Right Justify, Caption = "box middle"
+	JLabel Label23; // Caption = "claw middle"
+	JLabel Label19; // Center, Caption = "Number of boxes"
+	JLabel Label22; // Center, Caption = "Camera Rotation"
+	JLabel Label21; // Right Justify, Caption = "X"
+	JLabel Label20; // Right Justify, Caption = "Y"
+	JLabel Label18; // Right Justify, BorderStyle = Fixed Single
+	JLabel Label17; // Right Justify, BorderStyle = Fixed Single
+	JLabel Label15; // Center, Caption = "X-Translate"
+	JLabel Label14; // Center, Caption = "Z-Translate"
+	JLabel lblRouteName; // Center, BorderStyle = Fixed Single
+	JLabel Label13; // Center, Caption = "Route Name:"
+	JLabel Label12; // Center, Caption = "Open/Close"
+	JLabel Label11; // Center, Caption = "Rotate"
+	JLabel Label10; // Center, Caption = "Claw"
+	JLabel Label9; // Center, Caption = "Arm3"
+	JLabel Label8; // Center, Caption = "Arm2"
+	JLabel Label7; // Center, Caption = "Arm1"
+	JLabel Label6; // Caption = "z"
+	JLabel Label5; // Caption = "y"
+	JLabel Label4; // Caption = "x"
+	JLabel Label3; // Right Justify, BorderStyle = Fixed Single
+	JLabel Label2; // Right Justify, BorderStyle = Fixed Single
+	JLabel Label16; // Right Justify, BorderStyle = Fixed Single
+	
 	Robot r;
 	Box[] b = new Box[10];
 	
@@ -90,55 +162,72 @@ public class Form {
 	boolean[] holding = new boolean[10];
 	
 	private void chkMoves_Click() {
-	    
-	    If chkMoves.Value = 1 Then                                                          // if chkMoves is true after it is clicked
-	        txtArm1.Enabled = False: txtArm2.Enabled = False: txtArm3.Enabled = False:      // disable the use of txtArm1, txtArm2, and txtArm3
-	        txtClawRotate.Enabled = False: txtOpenClaw.Enabled = False                      // disable the use of txtClawRotate and txtOpenClaw
-	        txtXTranslate.Enabled = False: txtZTranslate.Enabled = False                    // disable the use of txtXTranslate and txtZTranslate
-	                                                                                        //  all of these are disabled because moving the robot
-	                                                                                        //  through the textboxes can affect the way a route is
-	                                                                                        //  replayed, so it is bad if they are used while teaching
-	        If lblRouteName = "" Then                                                       // if no route is currently selected
-	            msg = MsgBox("Would you like to create a new route?", vbYesNo)              // ask if user wants to create a new route
-	            If msg = 6 Then                                                             // if the user selects "Yes"
-	                cmdNewRoute_Click                                                       // go to the function to create a new route
-	            Else                                                                        // if the user selects "No"
-	                msg = MsgBox("Would you like to open an existing route?", vbYesNo)      // ask if user wants to load an existing route
-	                If msg = 6 Then                                                         // if the user selects "Yes"
-	                    cmdOpenRoute_Click                                                  // go to the function to create a new route
-	                Else                                                                    // if the user selects "No"
-	                End If                                                                  // do nothing, end of If msg = 6
-	            End If                                                                      // end of If msg = 6
-	        End If                                                                          // end of If lblRouteName = "
-	        cmdDrawRobot_Click                                                              // draw the robot even if it is already drawn
-	    End If                                                                              // end of If chkMoves.Value = 1
-	    
-	    If chkMoves.Value = 0 Then                                                          // if chkMoves is false after it is clicked
-	        txtArm1.Enabled = True: txtArm2.Enabled = True: txtArm3.Enabled = True          // allow the use of txtArm1, txtArm2, and txtArm3
-	        txtClawRotate.Enabled = True: txtOpenClaw.Enabled = True                        // allow the use of txtClawRotate and txtOpenClaw
-	        txtXTranslate.Enabled = True: txtZTranslate.Enabled = True                      // allow the use of txtXTranslate and txtZTranslate
-	    End If                                                                              // end of If chkMoves.Value = 0
-	        
-	    
+		if (chkMoves.isSelected()) { // if chkMoves is true after it is clicked
+			// disable the use of txtArm1, txtArm2, and txtArm3
+			txtArm1.setEnabled(false);
+			txtArm2.setEnabled(false);
+			txtArm3.setEnabled(false);
+			
+			// disable the use of txtClawRotate and txtOpenClaw
+			txtClawRotate.setEnabled(false);
+			txtOpenClaw.setEnabled(false);
+			
+			// disable the use of txtXTranslate and txtZTranslate
+			txtXTranslate.setEnabled(false);
+			txtZTranslate.setEnabled(false);
+			
+			// all of these are disabled because moving the robot
+			// through the textboxes can affect the way a route is
+			// replayed, so it is bad if they are used while teaching
+			
+			if (lblRouteName.getText().isEmpty()) { // if no route is currently selected
+				// ask if user wants to create a new route
+				msg = MsgBox("Would you like to create a new route?", vbYesNo);
+				if (msg == 6) { // if the user selects "Yes"
+					cmdNewRoute_Click(); // go to the function to create a new route
+				} else { // if the user selects "No"
+					// ask if user wants to load an existing route
+					msg = MsgBox("Would you like to open an existing route?", vbYesNo);
+					if (msg == 6) { // if the user selects "Yes"
+						cmdOpenRoute_Click(); // go to the function to create a new route
+					} else { // if the user selects "No"
+						// do nothing
+					}
+				}
+			}
+			cmdDrawRobot_Click(); // draw the robot even if it is already drawn
+		}
+		
+		if (!chkMoves.isSelected()) { // if chkMoves is false after it is clicked
+			// allow the use of txtArm1, txtArm2, and txtArm3
+			txtArm1.setEnabled(true);
+			txtArm2.setEnabled(true);
+			txtArm3.setEnabled(true);
+			
+			// allow the use of txtClawRotate and txtOpenClaw
+			txtClawRotate.setEnabled(true);
+			txtOpenClaw.setEnabled(true);
+			
+			// allow the use of txtXTranslate and txtZTranslate
+	        txtXTranslate.setEnabled(true);
+	        txtZTranslate.setEnabled(true);
+		}
 	}
 	
 	private void cmdClearCurrentRoute_Click() {
-
-	    For i = 0 To number_moves                                                   // start a for-loop from 0 to the number of moves in the current route
-	        moves(i) = ""                                                           // clears the current move
-	    Next i                                                                      // advance the for-loop
-
-	    number_moves = 0                                                            // there are no moves in the route (new route)
-	    
-	    If lblRouteName <> "" Then                                                  // if there is a route selected
-	        Open App.Path + "\" & lblRouteName & ".txt" For Output As #1            // open the file for that route
-	        Close #1                                                                // close the file without adding anything, which clears the file
-	    End If                                                                      // end of If lblRouteName <> ""
-	    
+		for (int i = 0; i < number_moves; i++) {
+			moves[i] = ""; // clears the current move
+		}
+		
+		number_moves = 0; // there are no moves in the route (new route)
+		
+		if (!lblRouteName.getText().isEmpty()) { // if there is a route selected
+			//Open App.Path + "\" & lblRouteName & ".txt" For Output As #1            // open the file for that route
+			//Close #1                                                                // close the file without adding anything, which clears the file
+		}
 	}
 	
 	private void cmdDrawRobot_Click() {
-	        
 	    frmRobot.hscrArm1.Value = 0                 // reset hscrArm1
 	    frmRobot.txtArm1 = 0                        // set txtArm1 to 0 to reflect the above change
 	    frmRobot.hscrArm2.Value = 0                 // reset hscrArm2

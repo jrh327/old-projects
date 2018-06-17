@@ -55,6 +55,9 @@ public class Box {
 	public double joint_x3;
 	public double joint_y3;
 	public double joint_z3;
+
+	private int width = 500;
+	private int height = 500;
 	
 	public void initialize() {
 		double bx, bz;
@@ -129,26 +132,23 @@ public class Box {
 	}
 	
 	public void draw(Graphics pct) {
-	    
-	    double plotx, ploty;
-	    double plotx2, ploty2;
-	    
-	    pixelx = pct.ScaleWidth / 30;
-	    pixely = pct.ScaleHeight / 30;
-	    
-	    originx = pct.ScaleWidth / 2;
-	    originy = pct.ScaleHeight / 8 * 5;
-	    
-	    For i = 1 To line_count
-	        
-	        plotx = originx + (vertex(lines(i).p1).x * (50 / (50 + vertex(lines(i).p1).z))) * pixelx; //  * 0.8
-	        ploty = originy - (vertex(lines(i).p1).y * (50 / (50 + vertex(lines(i).p1).z))) * pixely; //  * 0.8
-	        plotx2 = originx + (vertex(lines(i).p2).x * (50 / (50 + vertex(lines(i).p2).z))) * pixelx; //  * 0.8
-	        ploty2 = originy - (vertex(lines(i).p2).y * (50 / (50 + vertex(lines(i).p2).z))) * pixely; //  * 0.8
-	        
-	        pct.Line (plotx, ploty)-(plotx2, ploty2); // , RGB(Int(Rnd * 255), Int(Rnd * 255), Int(Rnd * 255)) // , RGB(lines(i).r, lines(i).g, lines(i).b)
-	    
-	    Next i
+		int plotx, ploty;
+		int plotx2, ploty2;
+		
+		int pixelx = width / 30;
+		int pixely = height / 30;
+		
+		int originx = width / 2;
+		int originy = height / 8 * 5;
+		
+		for (int i = 0; i < line_count; i++) {
+			plotx = (int)(originx + (vertex[lines[i].p1].x * (50 / (50 + vertex[lines[i].p1].z))) * pixelx); // * 0.8
+			ploty = (int)(originy - (vertex[lines[i].p1].y * (50 / (50 + vertex[lines[i].p1].z))) * pixely); // * 0.8
+			plotx2 = (int)(originx + (vertex[lines[i].p2].x * (50 / (50 + vertex[lines[i].p2].z))) * pixelx); // * 0.8
+			ploty2 = (int)(originy - (vertex[lines[i].p2].y * (50 / (50 + vertex[lines[i].p2].z))) * pixely); // * 0.8
+			
+			pct.drawLine(plotx, ploty, plotx2, ploty2); //, RGB(Int(Rnd * 255), Int(Rnd * 255), Int(Rnd * 255)) ', RGB(lines[i].r, lines[i].g, lines[i].b)
+		}
 	    
 	    middle_box_x = (vertex[1].x + vertex[2].x + vertex[3].x + vertex[4].x + vertex[5].x + vertex[6].x + vertex[7].x + vertex[8].x) / 8;
 	    middle_box_y = (vertex[1].y + vertex[2].y + vertex[3].y + vertex[4].y + vertex[5].y + vertex[6].y + vertex[7].y + vertex[8].y) / 8;
@@ -161,306 +161,312 @@ public class Box {
 	}
 	
 	public void rotate_with_arm1(Graphics pct, double theta) {
-	    
-	    double tempx, tempy, tempz;
-	    
-	    For i = 1 To vertex_count
-	    
-	        tempx = vertex(i).x; tempz = vertex(i).z
-	        
-	        vertex(i).z = tempz * Cos(radians(theta)) - tempx * Sin(radians(theta))
-	        vertex(i).x = tempz * Sin(radians(theta)) + tempx * Cos(radians(theta))
-	        
-	    Next i
-	    For i = 1 To 3
-	        tempx = joint(i).x; tempz = joint(i).z
-	        
-	        joint(i).z = tempz * Cos(radians(theta)) - tempx * Sin(radians(theta))
-	        joint(i).x = tempz * Sin(radians(theta)) + tempx * Cos(radians(theta))
-	    Next i
-	    
-	    rotate_factorY = theta
-	        
+		double tempx, tempy, tempz;
+		
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x;
+			tempz = vertex[i].z;
+			
+			vertex[i].z = tempz * Math.cos(radians(theta)) - tempx * Math.sin(radians(theta));
+			vertex[i].x = tempz * Math.sin(radians(theta)) + tempx * Math.cos(radians(theta));
+		}
+		
+		for (int i = 0; i < 3; i++) {
+			tempx = joint[i].x;
+			tempz = joint[i].z;
+			
+			joint[i].z = tempz * Math.cos(radians(theta)) - tempx * Math.sin(radians(theta));
+			joint[i].x = tempz * Math.sin(radians(theta)) + tempx * Math.cos(radians(theta));
+		}
 	}
 	
 	public void rotate_with_arm2(Graphics pct, double theta) {
-	    
-	    double tempx, tempy, tempz;
-	
-	    For i = 1 To vertex_count
-	        tempx = vertex(i).x - joint[1].x; tempy = vertex(i).y - joint[1].y
-	        
-	        vertex(i).x = tempx * Cos(radians(theta)) - tempy * Sin(radians(theta)) + joint[1].x
-	        vertex(i).y = tempx * Sin(radians(theta)) + tempy * Cos(radians(theta)) + joint[1].y
-	    
-	    Next i
-	    
-	    For i = 2 To 3
-	        tempx = joint(i).x - joint[1].x; tempy = joint(i).y - joint[1].y
-	   
-	        joint(i).x = tempx * Cos(radians(theta)) - tempy * Sin(radians(theta)) + joint[1].x
-	        joint(i).y = tempx * Sin(radians(theta)) + tempy * Cos(radians(theta)) + joint[1].y
-	
-	    Next i
-	    
-	    rotate_factorZ = theta
-	    
+		double tempx, tempy, tempz;
+		
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x - joint[0].x;
+			tempy = vertex[i].y - joint[0].y;
+			
+			vertex[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[0].x;
+			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[0].y;
+		}
+		
+		for (int i = 1; i < 3; i++) {
+			tempx = joint[i].x - joint[1].x;
+			tempy = joint[i].y - joint[0].y;
+			
+			joint[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[0].x;
+			joint[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[0].y;
+		}
+		
+		rotate_factorZ = theta;
 	}
 	
 	public void rotate_with_arm3(Graphics pct, double theta) {
-	    
-	    double tempx, tempy, tempz;
-	    
-	    For i = 1 To vertex_count
-	        tempx = vertex(i).x - joint[2].x; tempy = vertex(i).y - joint[2].y
-	        
-	        vertex(i).x = tempx * Cos(radians(theta)) - tempy * Sin(radians(theta)) + joint[2].x
-	        vertex(i).y = tempx * Sin(radians(theta)) + tempy * Cos(radians(theta)) + joint[2].y
-	    
-	    Next i
-	    
-	        tempx = joint[3].x - joint[2].x; tempy = joint[3].y - joint[2].y
-	   
-	        joint[3].x = tempx * Cos(radians(theta)) - tempy * Sin(radians(theta)) + joint[2].x
-	        joint[3].y = tempx * Sin(radians(theta)) + tempy * Cos(radians(theta)) + joint[2].y
-	    
-	    rotate_factorZ2 = theta
-	
+		double tempx, tempy, tempz;
+		
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x - joint[1].x;
+			tempy = vertex[i].y - joint[1].y;
+			
+			vertex[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[1].x;
+			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[1].y;
+		}
+		
+		tempx = joint[2].x - joint[1].x;
+		tempy = joint[2].y - joint[1].y;
+		
+		joint[2].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[1].x;
+		joint[2].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[1].y;
+		
+		rotate_factorZ2 = theta;
 	}
 	
 	public void rotate_with_claw(Graphics pct, double theta) {
-	    
-	    double tempx, tempy, tempz;
-	    
-	    For i = 1 To vertex_count
-	    
-	        tempy = vertex(i).y - joint[3].y; tempz = vertex(i).z - joint[3].z
-	        
-	        vertex(i).y = tempy * Cos(radians(theta)) - tempz * Sin(radians(theta)) + joint[3].y
-	        vertex(i).z = tempy * Sin(radians(theta)) + tempz * Cos(radians(theta)) + joint[3].z
-	    Next i
-	
-	    rotate_factorY3 = theta
-	
+		double tempx, tempy, tempz;
+		
+		for (int i = 0; i < vertex_count; i++) {
+			tempy = vertex[i].y - joint[2].y;
+			tempz = vertex[i].z - joint[2].z;
+			
+			vertex[i].y = tempy * Math.cos(radians(theta)) - tempz * Math.sin(radians(theta)) + joint[2].y;
+			vertex[i].z = tempy * Math.sin(radians(theta)) + tempz * Math.cos(radians(theta)) + joint[2].z;
+		}
+		
+		rotate_factorY3 = theta;
 	}
 	
 	public void translate_x(Graphics pct, int x_change) {
-	    
-	    // undo camera rotation
-	    For i = 1 To vertex_count
-	        tempy = vertex(i).y; tempz = vertex(i).z
-	        
-	        vertex(i).y = tempy * Cos(radians(-camera_x)) - tempz * Sin(radians(-camera_x))
-	        vertex(i).z = tempy * Sin(radians(-camera_x)) + tempz * Cos(radians(-camera_x))
-	    Next i
-	    For i = 1 To vertex_count
-	        tempx = vertex(i).x; tempz = vertex(i).z
-	        
-	        vertex(i).z = tempz * Cos(radians(-camera_y)) - tempx * Sin(radians(-camera_y))
-	        vertex(i).x = tempz * Sin(radians(-camera_y)) + tempx * Cos(radians(-camera_y))
-	    Next i
-	    
-	    // translate
-	    For i = 0 To vertex_count
-	        vertex(i).x = vertex(i).x + x_change
-	        If i < 4 Then joint(i).x = joint(i).x + x_change
-	    Next i
-	    
-	    // redo camera rotation
-	    For i = 1 To vertex_count
-	        tempx = vertex(i).x; tempz = vertex(i).z
-	        
-	        vertex(i).z = tempz * Cos(radians(camera_y)) - tempx * Sin(radians(camera_y))
-	        vertex(i).x = tempz * Sin(radians(camera_y)) + tempx * Cos(radians(camera_y))
-	    Next i
-	    For i = 1 To vertex_count
-	        tempy = vertex(i).y; tempz = vertex(i).z
-	        
-	        vertex(i).y = tempy * Cos(radians(camera_x)) - tempz * Sin(radians(camera_x))
-	        vertex(i).z = tempy * Sin(radians(camera_x)) + tempz * Cos(radians(camera_x))
-	    Next i
-	    
-	    draw pct
-	    
+		double tempx, tempy, tempz;
+		
+		// undo camera rotation
+		for (int i = 0; i < vertex_count; i++) {
+			tempy = vertex[i].y;
+			tempz = vertex[i].z;
+			
+			vertex[i].y = tempy * Math.cos(radians(-camera_x)) - tempz * Math.sin(radians(-camera_x));
+			vertex[i].z = tempy * Math.sin(radians(-camera_x)) + tempz * Math.cos(radians(-camera_x));
+		}
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x;
+			tempz = vertex[i].z;
+			
+			vertex[i].z = tempz * Math.cos(radians(-camera_y)) - tempx * Math.sin(radians(-camera_y));
+			vertex[i].x = tempz * Math.sin(radians(-camera_y)) + tempx * Math.cos(radians(-camera_y));
+		}
+		
+		// translate
+		for (int i = 0; i < vertex_count; i++) {
+			vertex[i].x = vertex[i].x + x_change;
+			if (i < 4) {
+				joint[i].x = joint[i].x + x_change;
+			}
+		}
+		
+		// redo camera rotation
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x;
+			tempz = vertex[i].z;
+			
+			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
+			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
+		}
+		for (int i = 0; i < vertex_count; i++) {
+			tempy = vertex[i].y;
+			tempz = vertex[i].z;
+			
+			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
+			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
+		}
+		
+		draw(pct);
 	}
 	
-	public void translate_z(PictureBox pct, int z_change) {
-	
-	    // undo camera rotation
-	    For i = 1 To vertex_count
-	        tempy = vertex(i).y; tempz = vertex(i).z
-	        
-	        vertex(i).y = tempy * Cos(radians(-camera_x)) - tempz * Sin(radians(-camera_x))
-	        vertex(i).z = tempy * Sin(radians(-camera_x)) + tempz * Cos(radians(-camera_x))
-	    Next i
-	    For i = 1 To vertex_count
-	        tempx = vertex(i).x; tempz = vertex(i).z
-	        
-	        vertex(i).z = tempz * Cos(radians(-camera_y)) - tempx * Sin(radians(-camera_y))
-	        vertex(i).x = tempz * Sin(radians(-camera_y)) + tempx * Cos(radians(-camera_y))
-	    Next i
-	    
-	    // translate
-	    For i = 0 To vertex_count
-	        vertex(i).z = vertex(i).z + z_change
-	        If i < 4 Then joint(i).z = joint(i).z + z_change
-	    Next
-	    
-	    // redo camera rotation
-	    For i = 1 To vertex_count
-	        tempx = vertex(i).x; tempz = vertex(i).z
-	        
-	        vertex(i).z = tempz * Cos(radians(camera_y)) - tempx * Sin(radians(camera_y))
-	        vertex(i).x = tempz * Sin(radians(camera_y)) + tempx * Cos(radians(camera_y))
-	    Next i
-	    For i = 1 To vertex_count
-	        tempy = vertex(i).y; tempz = vertex(i).z
-	        
-	        vertex(i).y = tempy * Cos(radians(camera_x)) - tempz * Sin(radians(camera_x))
-	        vertex(i).z = tempy * Sin(radians(camera_x)) + tempz * Cos(radians(camera_x))
-	    Next i
-	    
-	    draw pct
-	    
+	public void translate_z(Graphics pct, int z_change) {
+		double tempx, tempy, tempz;
+		
+		// undo camera rotation
+		for (int i = 0; i < vertex_count; i++) {
+			tempy = vertex[i].y;
+			tempz = vertex[i].z;
+			
+			vertex[i].y = tempy * Math.cos(radians(-camera_x)) - tempz * Math.sin(radians(-camera_x));
+			vertex[i].z = tempy * Math.sin(radians(-camera_x)) + tempz * Math.cos(radians(-camera_x));
+		}
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x;
+			tempz = vertex[i].z;
+			
+			vertex[i].z = tempz * Math.cos(radians(-camera_y)) - tempx * Math.sin(radians(-camera_y));
+			vertex[i].x = tempz * Math.sin(radians(-camera_y)) + tempx * Math.cos(radians(-camera_y));
+		}
+		
+		// translate
+		for (int i = 0; i < vertex_count; i++) {
+			vertex[i].z = vertex[i].z + z_change;
+			if (i < 4) {
+				joint[i].z = joint[i].z + z_change;
+			}
+		}
+		
+		// redo camera rotation
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x;
+			tempz = vertex[i].z;
+			
+			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
+			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
+		}
+		for (int i = 0; i < vertex_count; i++) {
+			tempy = vertex[i].y;
+			tempz = vertex[i].z;
+			
+			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
+			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
+		}
+		
+		draw(pct);
 	}
 	
 	public void drop() {
-	        
-	    // undo camera rotation
-	    For i = 1 To vertex_count
-	        tempy = vertex(i).y; tempz = vertex(i).z
-	        
-	        vertex(i).y = tempy * Cos(radians(-camera_x)) - tempz * Sin(radians(-camera_x))
-	        vertex(i).z = tempy * Sin(radians(-camera_x)) + tempz * Cos(radians(-camera_x))
-	    Next i
-	    For i = 1 To vertex_count
-	        tempx = vertex(i).x; tempz = vertex(i).z
-	        
-	        vertex(i).z = tempz * Cos(radians(-camera_y)) - tempx * Sin(radians(-camera_y))
-	        vertex(i).x = tempz * Sin(radians(-camera_y)) + tempx * Cos(radians(-camera_y))
-	    Next i
-	    
-	    // if the box is above the ground, move its location to the ground
-	    If vertex[1].y > -1.4 Then vertex[1].y = -1.4
-	    
-	    bx = vertex[1].x; bz = vertex[1].z
-	    
-	    vertex[1].x = bx; vertex[1].y = -1.4; vertex[1].z = bz
-	    vertex[2].x = bx - 1; vertex[2].y = -1.4; vertex[2].z = bz
-	    vertex[3].x = bx - 1; vertex[3].y = -1.4; vertex[3].z = bz - 1
-	    vertex[4].x = bx; vertex[4].y = -1.4; vertex[4].z = bz - 1
-	
-	    vertex[5].x = bx; vertex[5].y = -0.4; vertex[5].z = bz
-	    vertex[6].x = bx - 1; vertex[6].y = -0.4; vertex[6].z = bz
-	    vertex[7].x = bx - 1; vertex[7].y = -0.4; vertex[7].z = bz - 1
-	    vertex[8].x = bx; vertex[8].y = -0.4; vertex[8].z = bz - 1
-	    
-	    // redo camera rotation
-	    For i = 1 To vertex_count
-	        tempx = vertex(i).x; tempz = vertex(i).z
-	        
-	        vertex(i).z = tempz * Cos(radians(camera_y)) - tempx * Sin(radians(camera_y))
-	        vertex(i).x = tempz * Sin(radians(camera_y)) + tempx * Cos(radians(camera_y))
-	    Next i
-	    For i = 1 To vertex_count
-	        tempy = vertex(i).y; tempz = vertex(i).z
-	        
-	        vertex(i).y = tempy * Cos(radians(camera_x)) - tempz * Sin(radians(camera_x))
-	        vertex(i).z = tempy * Sin(radians(camera_x)) + tempz * Cos(radians(camera_x))
-	    Next i
-	    
+		double tempx, tempy, tempz;
+		
+		// undo camera rotation
+		for (int i = 0; i < vertex_count; i++) {
+			tempy = vertex[i].y; tempz = vertex[i].z;
+			
+			vertex[i].y = tempy * Math.cos(radians(-camera_x)) - tempz * Math.sin(radians(-camera_x));
+			vertex[i].z = tempy * Math.sin(radians(-camera_x)) + tempz * Math.cos(radians(-camera_x));
+		}
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x; tempz = vertex[i].z;
+			
+			vertex[i].z = tempz * Math.cos(radians(-camera_y)) - tempx * Math.sin(radians(-camera_y));
+			vertex[i].x = tempz * Math.sin(radians(-camera_y)) + tempx * Math.cos(radians(-camera_y));
+		}
+		
+		// if the box is above the ground, move its location to the ground
+		if (vertex[1].y > -1.4) vertex[1].y = -1.4;
+		
+		double  bx = vertex[1].x;
+		double bz = vertex[1].z;
+		
+		vertex[1].x = bx; vertex[1].y = -1.4; vertex[1].z = bz;
+		vertex[2].x = bx - 1; vertex[2].y = -1.4; vertex[2].z = bz;
+		vertex[3].x = bx - 1; vertex[3].y = -1.4; vertex[3].z = bz - 1;
+		vertex[4].x = bx; vertex[4].y = -1.4; vertex[4].z = bz - 1;
+		
+		vertex[5].x = bx; vertex[5].y = -0.4; vertex[5].z = bz;
+		vertex[6].x = bx - 1; vertex[6].y = -0.4; vertex[6].z = bz;
+		vertex[7].x = bx - 1; vertex[7].y = -0.4; vertex[7].z = bz - 1;
+		vertex[8].x = bx; vertex[8].y = -0.4; vertex[8].z = bz - 1;
+		
+		// redo camera rotation
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x; tempz = vertex[i].z;
+			
+			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
+			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
+		}
+		for (int i = 0; i < vertex_count; i++) {
+			tempy = vertex[i].y; tempz = vertex[i].z;
+			
+			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
+			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
+		}
 	}
 	
-	public void camera_rotate(PictureBox pct, int x_theta, int y_theta) {
-	    
-	    double tempy, tempz;
-	    
-	    //__________________________________
-	    //*******Rotate about x-axis********
-	    //----------------------------------
-	    
-	    // x-rotation
-	    If x_theta <> 0 Then
-	        For i = 1 To vertex_count
-	            tempy = vertex(i).y; tempz = vertex(i).z
-	            
-	            vertex(i).y = tempy * Cos(radians(x_theta - camera_x)) - tempz * Sin(radians(x_theta - camera_x))
-	            vertex(i).z = tempy * Sin(radians(x_theta - camera_x)) + tempz * Cos(radians(x_theta - camera_x))
-	        Next i
-	        
-	        // **Note** undoing the y-rotation is unnecessary because the camera rotates up and down relative
-	        // to the x-axis that goes across the screen, not the one relative to the robot. moving the camera
-	        // relative to the robot// s x-axis causes unwanted rotations that actually make the camera go under
-	        // the ground, which is both unrealistic and annoying
-	        
-	        camera_x = x_theta
-	    End If
-	    
-	    //___________________________________
-	    //********Rotate about y-axis********
-	    //-----------------------------------
-	    
-	    If y_theta <> 0 Then
-	        // undo x-rotation
-	        For i = 1 To vertex_count
-	            tempy = vertex(i).y; tempz = vertex(i).z
-	        
-	            vertex(i).y = tempy * Cos(radians(-camera_x)) - tempz * Sin(radians(-camera_x))
-	            vertex(i).z = tempy * Sin(radians(-camera_x)) + tempz * Cos(radians(-camera_x))
-	        Next i
-	        
-	        // y-rotation
-	        For i = 1 To vertex_count
-	            tempx = vertex(i).x; tempz = vertex(i).z
-	            
-	            vertex(i).z = tempz * Cos(radians(y_theta - camera_y)) - tempx * Sin(radians(y_theta - camera_y))
-	            vertex(i).x = tempz * Sin(radians(y_theta - camera_y)) + tempx * Cos(radians(y_theta - camera_y))
-	        Next i
-	        
-	        // redo x-rotation
-	        For i = 1 To vertex_count
-	            tempy = vertex(i).y; tempz = vertex(i).z
-	        
-	            vertex(i).y = tempy * Cos(radians(camera_x)) - tempz * Sin(radians(camera_x))
-	            vertex(i).z = tempy * Sin(radians(camera_x)) + tempz * Cos(radians(camera_x))
-	        Next i
-	        
-	        // undoing the x-rotation here is necessary because this rotates the camera relative to the y-axis
-	        // that goes up the screen, not the robot// s y-axis. without undoing the x-rotation, the whole robot
-	        // is rotated around an axis that would make the camera go under it and the ground. by undoing the
-	        // x-rotation so that the robot is standing straight up in its original position and then rotating it
-	        // around the y-axis, it is possible to create the illusion that the camera itself is moving around it
-	        
-	        camera_y = y_theta
-	    End If
-	
-	    draw pct
-	    
+	public void camera_rotate(Graphics pct, int x_theta, int y_theta) {
+		double tempx, tempy, tempz;
+		
+		//__________________________________
+		//*******Rotate about x-axis********
+		//----------------------------------
+		
+		// x-rotation
+		if (x_theta != 0) {
+			for (int i = 0; i < vertex_count; i++) {
+				tempy = vertex[i].y;
+				tempz = vertex[i].z;
+				
+				vertex[i].y = tempy * Math.cos(radians(x_theta - camera_x)) - tempz * Math.sin(radians(x_theta - camera_x));
+				vertex[i].z = tempy * Math.sin(radians(x_theta - camera_x)) + tempz * Math.cos(radians(x_theta - camera_x));
+			}
+			
+			// **Note** undoing the y-rotation is unnecessary because the camera rotates up and down relative
+			// to the x-axis that goes across the screen, not the one relative to the robot. moving the camera
+			// relative to the robot's x-axis causes unwanted rotations that actually make the camera go under
+			// the ground, which is both unrealistic and annoying
+			
+			camera_x = x_theta;
+		}
+		
+		//___________________________________
+		//********Rotate about y-axis********
+		//-----------------------------------
+		
+		if (y_theta != 0) {
+			// undo x-rotation
+			for (int i = 0; i < vertex_count; i++) {
+				tempy = vertex[i].y;
+				tempz = vertex[i].z;
+				
+				vertex[i].y = tempy * Math.cos(radians(-camera_x)) - tempz * Math.sin(radians(-camera_x));
+				vertex[i].z = tempy * Math.sin(radians(-camera_x)) + tempz * Math.cos(radians(-camera_x));
+			}
+			
+			// y-rotation
+			for (int i = 0; i < vertex_count; i++) {
+				tempx = vertex[i].x;
+				tempz = vertex[i].z;
+				
+				vertex[i].z = tempz * Math.cos(radians(y_theta - camera_y)) - tempx * Math.sin(radians(y_theta - camera_y));
+				vertex[i].x = tempz * Math.sin(radians(y_theta - camera_y)) + tempx * Math.cos(radians(y_theta - camera_y));
+			}
+			
+			// redo x-rotation
+			for (int i = 0; i < vertex_count; i++) {
+				tempy = vertex[i].y;
+				tempz = vertex[i].z;
+				
+				vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
+				vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
+			}
+			
+			// undoing the x-rotation here is necessary because this rotates the camera relative to the y-axis
+			// that goes up the screen, not the robot's y-axis. without undoing the x-rotation, the whole robot
+			// is rotated around an axis that would make the camera go under it and the ground. by undoing the
+			// x-rotation so that the robot is standing straight up in its original position and then rotating it
+			// around the y-axis, it is possible to create the illusion that the camera itself is moving around it
+			
+			camera_y = y_theta;
+		}
+		
+		draw(pct);
 	}
 	
-	public void super_rotate(PictureBox pct, int arm_num, double ry, double rz, double rz2, double ry3, double openclaw) {
-	    
-	    double tempx, tempy, tempz;
-	    double temprotatex;
-	    double temprotatey;
-	    double temprotatez;
-	    double temprotatex2;
-	    double temprotatey2;
-	    double temprotatez2;
-	    double temprotatex3;
-	    double temprotatey3;
-	    double temprotatez3;
-	    
-	    If arm_num = 1 Then rotate_factorY = rotate_factorY + ry
-	    If arm_num = 2 Then rotate_factorZ = rotate_factorZ + rz
-	    If arm_num = 3 Then rotate_factorZ2 = rotate_factorZ2 + rz2
-	    If arm_num = 4 Then rotate_factorY3 = rotate_factorY3 + ry3
-	    
-	    rotate_with_claw pct, rotate_factorY3
-	    rotate_with_arm3 pct, rotate_factorZ2
-	    rotate_with_arm2 pct, rotate_factorZ
-	    rotate_with_arm1 pct, rotate_factorY
-	    
+	public void super_rotate(Graphics pct, int arm_num, double ry, double rz, double rz2, double ry3, double openclaw) {
+		double tempx, tempy, tempz;
+		double temprotatex;
+		double temprotatey;
+		double temprotatez;
+		double temprotatex2;
+		double temprotatey2;
+		double temprotatez2;
+		double temprotatex3;
+		double temprotatey3;
+		double temprotatez3;
+		
+		if (arm_num == 1) rotate_factorY = rotate_factorY + ry;
+		if (arm_num == 2) rotate_factorZ = rotate_factorZ + rz;
+		if (arm_num == 3) rotate_factorZ2 = rotate_factorZ2 + rz2;
+		if (arm_num == 4) rotate_factorY3 = rotate_factorY3 + ry3;
+		
+		rotate_with_claw(pct, rotate_factorY3);
+		rotate_with_arm3(pct, rotate_factorZ2);
+		rotate_with_arm2(pct, rotate_factorZ);
+		rotate_with_arm1(pct, rotate_factorY);
+		
 	//     // redo translation
 	//     For i = 1 To vertex_count
 	//         vertex(i).x = vertex(i).x + joint[0].x
@@ -482,9 +488,8 @@ public class Box {
 	//         vertex(i).y = tempy * Cos(radians(camera_x)) - tempz * Sin(radians(camera_x))
 	//         vertex(i).z = tempy * Sin(radians(camera_x)) + tempz * Cos(radians(camera_x))
 	//     Next i
-	    
-	    draw pct
-	    
+		
+		draw(pct);
 	}
 	
 	public double degrees(double theta) {
