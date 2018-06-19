@@ -1,10 +1,15 @@
 package net.jonhopkins.robot;
 
 import java.awt.Graphics;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 import javax.swing.Timer;
@@ -185,13 +190,11 @@ public class Form {
 			
 			if (lblRouteName.getText().isEmpty()) { // if no route is currently selected
 				// ask if user wants to create a new route
-				msg = MsgBox("Would you like to create a new route?", vbYesNo);
-				if (msg == 6) { // if the user selects "Yes"
+				if (yesNo("Would you like to create a new route?")) { // if the user selects "Yes"
 					cmdNewRoute_Click(); // go to the function to create a new route
 				} else { // if the user selects "No"
 					// ask if user wants to load an existing route
-					msg = MsgBox("Would you like to open an existing route?", vbYesNo);
-					if (msg == 6) { // if the user selects "Yes"
+					if (yesNo("Would you like to open an existing route?")) { // if the user selects "Yes"
 						cmdOpenRoute_Click(); // go to the function to create a new route
 					} else { // if the user selects "No"
 						// do nothing
@@ -225,8 +228,12 @@ public class Form {
 		number_moves = 0; // there are no moves in the route (new route)
 		
 		if (!lblRouteName.getText().isEmpty()) { // if there is a route selected
-			//Open App.Path + "\" & lblRouteName & ".txt" For Output As #1            // open the file for that route
-			//Close #1                                                                // close the file without adding anything, which clears the file
+			// open the file for that route, and close the file without adding anything, which clears the file
+			try {
+				new FileWriter(getPath(lblRouteName.getText() + ".txt")).close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -299,12 +306,10 @@ public class Form {
 	
 	private void cmdNewRoute_Click() {
 		String route_name;
-		String route;
-		int msg;
+		String route = "";
 		
 		if (!lblRouteName.getText().isEmpty()) {
-			msg = MsgBox("Would you like to save your current route?", vbYesNo);
-			if (msg == 6) {
+			if (yesNo("Would you like to save your current route?")) {
 				for (int i = 0; i < number_moves; i++) {
 					route = route + moves[i];
 				}
@@ -313,24 +318,25 @@ public class Form {
 			}
 		}
 		
-		route_name = InputBox("What would you like the new route to be named?");
+		route_name = input("What would you like the new route to be named?");
 		
 		do {
-			if (!Dir(App.Path + "/" + route_name + ".txt").isEmpty()) {
-				msg = MsgBox("This route already exists. Overwrite?", vbYesNo);
-				if (msg == 6) {
-					Open App.Path + "/" + route_name + ".txt" For Output As #1
-					Close #1
-					GoTo EndLoop
-				}
-				if (msg == 7) {
-					msg = MsgBox("Create a different route?", vbYesNo);
-					if (msg == 6) {
-						route_name = InputBox("Route name:");
+			String filename = getPath(route_name + ".txt");
+			if (fileExists(filename)) {
+				if (yesNo("This route already exists. Overwrite?")) {
+					try {
+						new FileWriter(filename).close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
+				} else {
+					if (yesNo("Create a different route?")) {
+						route_name = input("Route name:");
 					}
 				}
 			}
-		} while (!Dir(App.Path + "/" + route_name + ".txt").isEmpty());
+		} while (fileExists(getPath(route_name + ".txt")));
 		
 		for (int i = 0; i < number_moves; i++) {
 			moves[i] = "";
@@ -344,26 +350,27 @@ public class Form {
 	
 	private void cmdOpenRoute_Click() {
 		String route_name;
-		String listRoutes;
+		String listRoutes = "";
 		
-		if (Dir(App.Path + "/RouteList.txt").isEmpty()) {
-			Open App.Path + "/RouteList.txt" For Output As #1
-			Close #1
+		String filename = getPath("RouteList.txt");
+		if (!fileExists(filename)) {
+			try {
+				new FileWriter(filename).close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		Open App.Path + "\RouteList.txt" For Input As #1
-		
-		while (Not EOF(1)) {
-			Line Input #1, sNextLine
-			listRoutes = listRoutes + sNextLine + "\n";
+		try {
+			listRoutes = String.join("\n", Files.readAllLines(new File(filename).toPath()));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		
-		Close #1
-		
-		route_name = InputBox("Which route would you like to open?" & vbCrLf & "Routes: " & vbCrLf & listRoutes)
+		route_name = input("Which route would you like to open?\nRoutes: \n" + listRoutes);
 		
 		if (route_name.isEmpty()) {
-			MsgBox "No route selected.";
+			alert("No route selected.");
 			return;
 		}
 		
@@ -376,62 +383,60 @@ public class Form {
 		Open_route(route_name);
 		cmdSaveRoute.setEnabled(true);
 		
-		cmdAutoRobot.SetFocus();
+		cmdAutoRobot.grabFocus();
 	}
 	
 	private void Save_route(String route) {
-		if (Dir(App.Path + "/" + lblRouteName.getText() + ".txt").isEmpty()) {
-			Open App.Path + "/RouteList.txt" For Append As #1
-				Print #1, lblRouteName
-			Close #1
+		String filename = getPath(lblRouteName.getText() + ".txt");
+		if (!fileExists(filename)) {
+			try {
+				FileWriter writer = new FileWriter(getPath("RouteList.txt"));
+				writer.append(lblRouteName.getText());
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		Open App.Path + "/" + lblRouteName.getText() + ".txt" For Output As #1
-			Print #1, route
-		Close #1
+		try {
+			FileWriter writer = new FileWriter(filename);
+			writer.write(route);
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void Open_route(String route_name) {
 		String move_type;
 		String filename;
-		String routelist;
+		String routelist = "";
 		
-		filename = App.Path + "/" + route_name + ".txt";
-		if (Dir(filename).isEmpty()) {
-			GoTo CreateRoute;
+		filename = getPath(route_name + ".txt");
+		if (!fileExists(filename)) {
+			if (yesNo("File does not exist! Would you like to create the route?")) {
+				lblRouteName.setText(route_name);
+				cmdSaveRoute_Click();
+			}
+			return;
 		}
 		
-		Open filename For Input As #1
-		Input #1, routelist
-			if (routelist.length() == 0) {
-				GoTo skipOpen;
-			}
-			
-			number_moves = routelist.length();
-			for (int i = 0; i < number_moves; i++) {
-				move_type = routelist.substring(i, 1);
-				moves[i] = move_type;
-			}
-			
-	skipOpen:
-		
-		Close #1
+		try {
+			routelist = new String(Files.readAllBytes(new File(filename).toPath())).trim();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		number_moves = routelist.length();
+		for (int i = 0; i < number_moves; i++) {
+			move_type = routelist.substring(i, 1);
+			moves[i] = move_type;
+		}
 		
 		lblRouteName.setText(route_name);
-		
-		return;
-		
-	CreateRoute:
-		msg = MsgBox("File does not exist! Would you like to create the route?", vbYesNo);
-		if (msg == 6) {
-			lblRouteName.setText(route_name);
-			cmdSaveRoute_Click();
-		}
 	}
 	
 	private void cmdResetRobot_Click() {
-		int msg = MsgBox("Save route?", vbYesNo);
-		if (msg == 6) {
+		if (yesNo("Save route?")) {
 			cmdSaveRoute_Click();
 		}
 		
@@ -445,21 +450,17 @@ public class Form {
 			route = route + moves[i];
 		}
 		
-		// MsgBox route
+		// alert(route);
 		
 		Save_route(route);
 	}
 	
 	private void Form_Unload(int Cancel) {
-		int msg;
-		if (!lblRouteName.getText().isEmpty()) {
-			msg = MsgBox("Save current route?", vbYesNo);
-		}
-		if (msg == 6) {
+		if (!lblRouteName.getText().isEmpty() && yesNo("Save current route?")) {
 			cmdSaveRoute_Click();
 		}
 		
-		Close();
+		System.exit(0);
 	}
 	
 	private void hscrArm1_Change() {
@@ -570,7 +571,7 @@ public class Form {
 		if (hscrClawOpen.getValue() < (Integer.parseInt(txtOpenClaw.getText()) * 10)) {
 			for (int i = 0; i < number_boxes; i++) {
 				if (holding[i]) {
-					hscrClawOpen.setValue(hscrClawOpen.getValue() + hscrClawOpen.SmallChange);
+					hscrClawOpen.setValue(hscrClawOpen.getValue() + hscrClawOpen.getUnitIncrement());
 					return;
 				}
 			}
@@ -606,7 +607,7 @@ public class Form {
 						&& middle_claw_z < middle_box_z[i] + 0.5
 						&& middle_claw_z > middle_box_z[i] - 0.5) {
 					holding[i] = true;
-					MsgBox("Holding a box");
+					alert("Holding a box");
 					b[i].rotate_factorY = r.rotate_factorY;
 				}
 			}
@@ -998,5 +999,26 @@ public class Form {
 	
 	public double radians(double theta) {
 		return (theta * (3.1415926538979 / 180.0));
+	}
+	
+	private void alert(String message) {
+		JOptionPane.showMessageDialog(null, message);
+	}
+	
+	private boolean yesNo(String message) {
+		int result = JOptionPane.showConfirmDialog(null, message, "", JOptionPane.YES_NO_OPTION);
+		return (result == JOptionPane.YES_OPTION);
+	}
+	
+	private String input(String message) {
+		return JOptionPane.showInputDialog(message);
+	}
+	
+	private boolean fileExists(String filepath) {
+		return new File(filepath).exists();
+	}
+	
+	private String getPath(String filename) {
+		return System.getProperty("user.dir") + "/" + filename;
 	}
 }

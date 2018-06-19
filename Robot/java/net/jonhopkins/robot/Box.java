@@ -149,15 +149,14 @@ public class Box {
 			
 			pct.drawLine(plotx, ploty, plotx2, ploty2); //, RGB(Int(Rnd * 255), Int(Rnd * 255), Int(Rnd * 255)) ', RGB(lines[i].r, lines[i].g, lines[i].b)
 		}
-	    
-	    middle_box_x = (vertex[1].x + vertex[2].x + vertex[3].x + vertex[4].x + vertex[5].x + vertex[6].x + vertex[7].x + vertex[8].x) / 8;
-	    middle_box_y = (vertex[1].y + vertex[2].y + vertex[3].y + vertex[4].y + vertex[5].y + vertex[6].y + vertex[7].y + vertex[8].y) / 8;
-	    middle_box_z = (vertex[1].z + vertex[2].z + vertex[3].z + vertex[4].z + vertex[5].z + vertex[6].z + vertex[7].z + vertex[8].z) / 8;
-	    
-	    //frmRobot.Label16 = Format(middle_box_x, "##.##")
-	    //frmRobot.Label17 = Format(middle_box_y, "##.##")
-	    //frmRobot.Label18 = Format(middle_box_z, "##.##")
-	
+		
+		middle_box_x = (vertex[1].x + vertex[2].x + vertex[3].x + vertex[4].x + vertex[5].x + vertex[6].x + vertex[7].x + vertex[8].x) / 8;
+		middle_box_y = (vertex[1].y + vertex[2].y + vertex[3].y + vertex[4].y + vertex[5].y + vertex[6].y + vertex[7].y + vertex[8].y) / 8;
+		middle_box_z = (vertex[1].z + vertex[2].z + vertex[3].z + vertex[4].z + vertex[5].z + vertex[6].z + vertex[7].z + vertex[8].z) / 8;
+		
+		//frmRobot.Label16 = Format(middle_box_x, "##.##")
+		//frmRobot.Label17 = Format(middle_box_y, "##.##")
+		//frmRobot.Label18 = Format(middle_box_z, "##.##")
 	}
 	
 	public void rotate_with_arm1(Graphics pct, double theta) {
