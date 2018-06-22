@@ -1,6 +1,7 @@
 package net.jonhopkins.robot;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,10 +9,12 @@ import java.nio.file.Files;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 public class Form {
@@ -44,16 +47,8 @@ public class Form {
 	JScrollBar hscrArm1; // Min = -360, Max = 360, SmallChange = 5, LargeChange = 5
 	JTextField txtArm1; // Right Justify, Text = "0"
 	JButton cmdDrawRobot; // Caption = "Drawz :D"
-// Begin VB.PictureBox pctRobot 
-//    Height          =   9000
-//    Left            =   0
-//    ScaleHeight     =   596
-//    ScaleMode       =   3  'Pixel
-//    ScaleWidth      =   596
-//    TabIndex        =   0
-//    Top             =   0
-//    Width           =   9000
-// End
+	JFrame renderArea;
+	Image buffer;
 	Graphics pctRobot;
 	JLabel Label1; // Right Justify, BorderStyle = Fixed Single
 	JLabel Label24; // Right Justify, Caption = "box middle"
@@ -168,6 +163,210 @@ public class Form {
 	 * boolean to tell the robot if it is holding a box, array of 10, one for each of the 10 possible boxes on the screen
 	 */
 	boolean[] holding = new boolean[10];
+	
+	public Form() {
+		txtNumberBoxes = new JTextField("5");
+		txtNumberBoxes.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtNumberBoxes.setBounds(7560, 9360, 975, 285);
+		
+		hscrRotateX = new JScrollBar(SwingConstants.HORIZONTAL, 0, 20, 0, 75);
+		hscrRotateX.setUnitIncrement(5);
+		hscrRotateX.setBounds(4320, 9360, 1095, 255);
+		
+		txtRotateX = new JTextField("0");
+		txtRotateX.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtRotateX.setBounds(4440, 9720, 855, 285);
+		
+		hscrRotateY = new JScrollBar(SwingConstants.HORIZONTAL, 0, 20, 0, 360);
+		hscrRotateY.setUnitIncrement(5);
+		hscrRotateY.setBounds(5880, 9360, 1095, 255);
+		
+		txtRotateY = new JTextField("0");
+		txtRotateY.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtRotateY.setBounds(6000, 9720, 855, 285);
+		
+		hscrXTranslate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, -15, 15);
+		hscrXTranslate.setBounds(9240, 3240, 1095, 255);
+		
+		hscrZTranslate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, -20, -20);
+		hscrZTranslate.setBounds(9240, 4200, 1095, 255);
+		
+		txtXTranslate = new JTextField("0");
+		txtXTranslate.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtXTranslate.setBounds(9360, 3600, 855, 285);
+		
+		txtZTranslate = new JTextField("0");
+		txtZTranslate.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtZTranslate.setBounds(9360, 4560, 855, 285);
+		
+		cmdOpenRoute = new JButton("Open");
+		cmdOpenRoute.setBounds(9720, 1920, 735, 315);
+		
+		cmdSaveRoute = new JButton("Save");
+		cmdSaveRoute.setEnabled(false);
+		cmdSaveRoute.setBounds(9120, 1920, 615, 315);
+		
+		cmdAutoRobot = new JButton("AutoGo");
+		cmdAutoRobot.setBounds(9360, 2640, 855, 315);
+		
+		cmdClearCurrentRoute = new JButton("Clear Route");
+		cmdClearCurrentRoute.setBounds(9720, 1440, 735, 495);
+		
+		cmdNewRoute = new JButton("New Route");
+		cmdNewRoute.setBounds(9120, 1440, 615, 495);
+		
+		chkMoves = new JCheckBox("Teach Route");
+		chkMoves.setBounds(9120, 480, 1335, 255);
+		
+		cmdResetRobot = new JButton("Reset");
+		cmdResetRobot.setBounds(9360, 2280, 855, 315);
+		
+		Timer tmrResetRobot; // Enabled = False, Interval = 50
+		Timer tmrAutoRobot; // Enabled = False, Interval = 100
+		
+		txtOpenClaw = new JTextField("0");
+		txtOpenClaw.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtOpenClaw.setBounds(9360, 9600, 855, 285);
+		
+		txtClawRotate = new JTextField("90");
+		txtClawRotate.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtClawRotate.setBounds(9360, 8640, 855, 285);
+		
+		txtArm3 = new JTextField("0");
+		txtArm3.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtArm3.setBounds(9360, 7440, 855, 285);
+		
+		txtArm2 = new JTextField("0");
+		txtArm2.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtArm2.setBounds(9360, 6480, 855, 285);
+		
+		hscrClawOpen = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, 0, 6);
+		hscrClawOpen.setBounds(9240, 9240, 1095, 255);
+		
+		hscrClawRotate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, 0, 180);
+		hscrClawRotate.setUnitIncrement(5);
+		hscrClawRotate.setBounds(9240, 8280, 1095, 255);
+		
+		hscrArm3 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, -20, 200);
+		hscrArm3.setUnitIncrement(5);
+		hscrArm3.setBounds(9240, 7080, 1095, 255);
+		
+		hscrArm2 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, 0, 180);
+		hscrArm2.setUnitIncrement(5);
+		hscrArm2.setBounds(9240, 6120, 1095, 255);
+		
+		hscrArm1 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, -360, 360);
+		hscrArm1.setUnitIncrement(5);
+		hscrArm1.setBounds(9240, 5160, 1095, 255);
+		
+		txtArm1 = new JTextField("0");
+		txtArm1.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtArm1.setBounds(9360, 5520, 855, 285);
+		
+		cmdDrawRobot = new JButton("Drawz :D");
+		cmdDrawRobot.setBounds(9480, 120, 855, 255);
+
+		renderArea = new JFrame();
+		renderArea.setBounds(0, 0, 9000, 9000);
+		buffer = renderArea.createImage(9000, 9000);
+		pctRobot = buffer.getGraphics();
+		
+		Label1 = new JLabel();
+		Label1.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label1.setBounds(1440, 9360, 615, 255);
+		
+		Label24 = new JLabel("box middle");
+		Label24.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label24.setBounds(480, 9720, 855, 255);
+		
+		Label23 = new JLabel("claw middle");
+		Label23.setBounds(600, 9360, 855, 255);
+		
+		Label19 = new JLabel("Number of boxes");
+		Label19.setHorizontalAlignment(SwingConstants.CENTER);
+		Label19.setBounds(7320, 9120, 1455, 255);
+		
+		Label22 = new JLabel("Camera Rotation");
+		Label22.setHorizontalAlignment(SwingConstants.CENTER);
+		Label22.setBounds(4920, 9120, 1335, 255);
+		
+		Label21 = new JLabel("X");
+		Label21.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label21.setBounds(3960, 9360, 255, 255);
+		
+		Label20 = new JLabel("Y");
+		Label20.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label20.setBounds(5520, 9360, 255, 255);
+		
+		Label18 = new JLabel();
+		Label18.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label18.setBounds(3120, 9720, 615, 255);
+		
+		Label17 = new JLabel();
+		Label17.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label17.setBounds(2280, 9720, 615, 255);
+		
+		Label15 = new JLabel("X-Translate");
+		Label15.setHorizontalAlignment(SwingConstants.CENTER);
+		Label15.setBounds(9240, 3000, 1095, 255);
+		
+		Label14 = new JLabel("Z-Translate");
+		Label14.setHorizontalAlignment(SwingConstants.CENTER);
+		Label14.setBounds(9240, 3960, 1095, 255);
+		
+		lblRouteName = new JLabel();
+		lblRouteName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRouteName.setBounds(9120, 1080, 1335, 255);
+		
+		Label13 = new JLabel("Route Name:");
+		Label13.setHorizontalAlignment(SwingConstants.CENTER);
+		Label13.setBounds(9240, 840, 1095, 255);
+		
+		Label12 = new JLabel("Open/Close");
+		Label12.setHorizontalAlignment(SwingConstants.CENTER);
+		Label12.setBounds(9240, 9000, 1095, 255);
+		
+		Label11 = new JLabel("Rotate");
+		Label11.setHorizontalAlignment(SwingConstants.CENTER);
+		Label11.setBounds(9240, 8040, 1095, 255);
+		
+		Label10 = new JLabel("Claw");
+		Label10.setHorizontalAlignment(SwingConstants.CENTER);
+		Label10.setBounds(9240, 7800, 1095, 255);
+		
+		Label9 = new JLabel("Arm3");
+		Label9.setHorizontalAlignment(SwingConstants.CENTER);
+		Label9.setBounds(9240, 6840, 1095, 255);
+		
+		Label8 = new JLabel("Arm2");
+		Label8.setHorizontalAlignment(SwingConstants.CENTER);
+		Label8.setBounds(9240, 5880, 1095, 255);
+		
+		Label7 = new JLabel("Arm1");
+		Label7.setHorizontalAlignment(SwingConstants.CENTER);
+		Label7.setBounds(9240, 4920, 1095, 255);
+		
+		Label6 = new JLabel("z");
+		Label6.setBounds(3360, 9000, 255, 255);
+		
+		Label5 = new JLabel("y");
+		Label5.setBounds(2520, 9000, 255, 255);
+		
+		Label4 = new JLabel("x");
+		Label4.setBounds(1680, 9000, 255, 255);
+		
+		Label3 = new JLabel();
+		Label3.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label3.setBounds(3120, 9360, 615, 255);
+		
+		Label2 = new JLabel();
+		Label2.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label2.setBounds(2280, 9360, 615, 255);
+		
+		Label16 = new JLabel();
+		Label16.setHorizontalAlignment(SwingConstants.RIGHT);
+		Label16.setBounds(1440, 9720, 615, 255);
+	}
 	
 	private void chkMoves_Click() {
 		if (chkMoves.isSelected()) { // if chkMoves is true after it is clicked
