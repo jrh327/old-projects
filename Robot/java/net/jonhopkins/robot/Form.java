@@ -352,8 +352,18 @@ public class Form extends JFrame {
 			}
 		});
 		
-		Timer tmrResetRobot; // Enabled = False, Interval = 50
-		Timer tmrAutoRobot; // Enabled = False, Interval = 100
+		tmrResetRobot = new Timer(50, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tmrResetRobot_Timer();
+			}
+		});
+		tmrAutoRobot = new Timer(100, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tmrAutoRobot_Timer();
+			}
+		});
 		
 		txtOpenClaw = new JTextField("0");
 		txtOpenClaw.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -509,7 +519,7 @@ public class Form extends JFrame {
 		Label14.setHorizontalAlignment(SwingConstants.CENTER);
 		Label14.setBounds(924, 396, 109, 25);
 		
-		lblRouteName = new JLabel();
+		lblRouteName = new JLabel("");
 		lblRouteName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRouteName.setBounds(912, 108, 133, 25);
 		
@@ -1502,7 +1512,8 @@ public class Form extends JFrame {
 	}
 	
 	private String input(String message) {
-		return JOptionPane.showInputDialog(message);
+		String response = JOptionPane.showInputDialog(message);
+		return response == null ? "" : response;
 	}
 	
 	private boolean fileExists(String filepath) {
