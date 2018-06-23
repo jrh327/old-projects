@@ -19,9 +19,9 @@ public class Box {
 		int b;
 	}
 	
-	private point_c[] vertex = new point_c[2000];
-	private point_c[] joint = new point_c[5];
-	private line[] lines = new line[6000];
+	private point_c[] vertex = new point_c[8];
+	private point_c[] joint = new point_c[4];
+	private line[] lines = new line[12];
 	
 	private int vertex_count;
 	private int line_count;
@@ -83,30 +83,30 @@ public class Box {
 		bx = ((int)((rnd.nextDouble() * 30) * 10) / 10) - 15;
 		bz = ((int)((rnd.nextDouble() * 30) * 10) / 10) - 15;
 		
-		vertex[1].x = bx; vertex[1].y = -1.4; vertex[1].z = bz;
-		vertex[2].x = bx - 1; vertex[2].y = -1.4; vertex[2].z = bz;
-		vertex[3].x = bx - 1; vertex[3].y = -1.4; vertex[3].z = bz - 1;
-		vertex[4].x = bx; vertex[4].y = -1.4; vertex[4].z = bz - 1;
+		vertex[0].x = bx; vertex[0].y = -1.4; vertex[0].z = bz;
+		vertex[1].x = bx - 1; vertex[1].y = -1.4; vertex[1].z = bz;
+		vertex[2].x = bx - 1; vertex[2].y = -1.4; vertex[2].z = bz - 1;
+		vertex[3].x = bx; vertex[3].y = -1.4; vertex[3].z = bz - 1;
 		
-		vertex[5].x = bx; vertex[5].y = -0.4; vertex[5].z = bz;
-		vertex[6].x = bx - 1; vertex[6].y = -0.4; vertex[6].z = bz;
-		vertex[7].x = bx - 1; vertex[7].y = -0.4; vertex[7].z = bz - 1;
-		vertex[8].x = bx; vertex[8].y = -0.4; vertex[8].z = bz - 1;
+		vertex[4].x = bx; vertex[4].y = -0.4; vertex[4].z = bz;
+		vertex[5].x = bx - 1; vertex[5].y = -0.4; vertex[5].z = bz;
+		vertex[6].x = bx - 1; vertex[6].y = -0.4; vertex[6].z = bz - 1;
+		vertex[7].x = bx; vertex[7].y = -0.4; vertex[7].z = bz - 1;
 		
+		lines[0].p1 = 0; lines[0].p2 = 1;
 		lines[1].p1 = 1; lines[1].p2 = 2;
 		lines[2].p1 = 2; lines[2].p2 = 3;
-		lines[3].p1 = 3; lines[3].p2 = 4;
-		lines[4].p1 = 4; lines[4].p2 = 1;
+		lines[3].p1 = 3; lines[3].p2 = 0;
 		
+		lines[4].p1 = 4; lines[4].p2 = 5;
 		lines[5].p1 = 5; lines[5].p2 = 6;
 		lines[6].p1 = 6; lines[6].p2 = 7;
-		lines[7].p1 = 7; lines[7].p2 = 8;
-		lines[8].p1 = 8; lines[8].p2 = 5;
+		lines[7].p1 = 7; lines[7].p2 = 4;
 		
+		lines[8].p1 = 0; lines[8].p2 = 4;
 		lines[9].p1 = 1; lines[9].p2 = 5;
 		lines[10].p1 = 2; lines[10].p2 = 6;
 		lines[11].p1 = 3; lines[11].p2 = 7;
-		lines[12].p1 = 4; lines[12].p2 = 8;
 		
 		vertex_count = 8;
 		line_count = 12;
@@ -162,9 +162,9 @@ public class Box {
 			pct.drawLine(plotx, ploty, plotx2, ploty2); //, RGB(Int(Rnd * 255), Int(Rnd * 255), Int(Rnd * 255)) ', RGB(lines[i].r, lines[i].g, lines[i].b)
 		}
 		
-		middle_box_x = (vertex[1].x + vertex[2].x + vertex[3].x + vertex[4].x + vertex[5].x + vertex[6].x + vertex[7].x + vertex[8].x) / 8;
-		middle_box_y = (vertex[1].y + vertex[2].y + vertex[3].y + vertex[4].y + vertex[5].y + vertex[6].y + vertex[7].y + vertex[8].y) / 8;
-		middle_box_z = (vertex[1].z + vertex[2].z + vertex[3].z + vertex[4].z + vertex[5].z + vertex[6].z + vertex[7].z + vertex[8].z) / 8;
+		middle_box_x = (vertex[0].x + vertex[1].x + vertex[2].x + vertex[3].x + vertex[4].x + vertex[5].x + vertex[6].x + vertex[7].x) / 8;
+		middle_box_y = (vertex[0].y + vertex[1].y + vertex[2].y + vertex[3].y + vertex[4].y + vertex[5].y + vertex[6].y + vertex[7].y) / 8;
+		middle_box_z = (vertex[0].z + vertex[1].z + vertex[2].z + vertex[3].z + vertex[4].z + vertex[5].z + vertex[6].z + vertex[7].z) / 8;
 		
 		//frmRobot.Label16 = Format(middle_box_x, "##.##")
 		//frmRobot.Label17 = Format(middle_box_y, "##.##")
@@ -362,15 +362,15 @@ public class Box {
 		double  bx = vertex[1].x;
 		double bz = vertex[1].z;
 		
-		vertex[1].x = bx; vertex[1].y = -1.4; vertex[1].z = bz;
-		vertex[2].x = bx - 1; vertex[2].y = -1.4; vertex[2].z = bz;
-		vertex[3].x = bx - 1; vertex[3].y = -1.4; vertex[3].z = bz - 1;
-		vertex[4].x = bx; vertex[4].y = -1.4; vertex[4].z = bz - 1;
+		vertex[0].x = bx; vertex[0].y = -1.4; vertex[0].z = bz;
+		vertex[1].x = bx - 1; vertex[1].y = -1.4; vertex[1].z = bz;
+		vertex[2].x = bx - 1; vertex[2].y = -1.4; vertex[2].z = bz - 1;
+		vertex[3].x = bx; vertex[3].y = -1.4; vertex[3].z = bz - 1;
 		
-		vertex[5].x = bx; vertex[5].y = -0.4; vertex[5].z = bz;
-		vertex[6].x = bx - 1; vertex[6].y = -0.4; vertex[6].z = bz;
-		vertex[7].x = bx - 1; vertex[7].y = -0.4; vertex[7].z = bz - 1;
-		vertex[8].x = bx; vertex[8].y = -0.4; vertex[8].z = bz - 1;
+		vertex[4].x = bx; vertex[4].y = -0.4; vertex[4].z = bz;
+		vertex[5].x = bx - 1; vertex[5].y = -0.4; vertex[5].z = bz;
+		vertex[6].x = bx - 1; vertex[6].y = -0.4; vertex[6].z = bz - 1;
+		vertex[7].x = bx; vertex[7].y = -0.4; vertex[7].z = bz - 1;
 		
 		// redo camera rotation
 		for (int i = 0; i < vertex_count; i++) {
