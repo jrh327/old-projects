@@ -2,6 +2,12 @@ package net.jonhopkins.robot;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,12 +18,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-public class Form {
+public class Form extends JFrame {
+	private static final long serialVersionUID = -6031794944802349379L;
 	JTextField txtNumberBoxes; // Right Justify, Text = "5"
 	JScrollBar hscrRotateX; // Max = 75, SmallChange = 5, LargeChange = 20
 	JTextField txtRotateX; // Right Justify, Text = "0"
@@ -47,7 +56,7 @@ public class Form {
 	JScrollBar hscrArm1; // Min = -360, Max = 360, SmallChange = 5, LargeChange = 5
 	JTextField txtArm1; // Right Justify, Text = "0"
 	JButton cmdDrawRobot; // Caption = "Drawz :D"
-	JFrame renderArea;
+	JPanel renderArea;
 	Image buffer;
 	Graphics pctRobot;
 	JLabel Label1; // Right Justify, BorderStyle = Fixed Single
@@ -164,208 +173,448 @@ public class Form {
 	 */
 	boolean[] holding = new boolean[10];
 	
+	public static void main(String[] args) {
+		new Form().init();
+	}
+	
 	public Form() {
+		r = new Robot();
+		for (int i = 0; i < b.length; i++) {
+			b[i] = new Box();
+		}
+	}
+	
+	public void init() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				setUpWindow();
+				setUpComponents();
+				buffer = renderArea.createImage(900, 900);
+				pctRobot = buffer.getGraphics();
+				
+				repaint();
+			}
+		});
+	}
+	
+	public void setUpWindow() {
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent event) {
+				Form_Unload();
+			}
+		});
+		
+		setSize(1053, 1017);
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
+	
+	public void setUpComponents() {
 		txtNumberBoxes = new JTextField("5");
 		txtNumberBoxes.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtNumberBoxes.setBounds(7560, 9360, 975, 285);
+		txtNumberBoxes.setBounds(756, 936, 97, 28);
+		txtNumberBoxes.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtNumberBoxes_Change();
+			}
+		});
 		
 		hscrRotateX = new JScrollBar(SwingConstants.HORIZONTAL, 0, 20, 0, 75);
 		hscrRotateX.setUnitIncrement(5);
-		hscrRotateX.setBounds(4320, 9360, 1095, 255);
+		hscrRotateX.setBounds(432, 936, 109, 25);
+		hscrRotateX.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrRotateX_Change();
+			}
+		});
 		
 		txtRotateX = new JTextField("0");
 		txtRotateX.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtRotateX.setBounds(4440, 9720, 855, 285);
+		txtRotateX.setBounds(444, 972, 85, 28);
 		
 		hscrRotateY = new JScrollBar(SwingConstants.HORIZONTAL, 0, 20, 0, 360);
 		hscrRotateY.setUnitIncrement(5);
-		hscrRotateY.setBounds(5880, 9360, 1095, 255);
+		hscrRotateY.setBounds(588, 936, 109, 25);
+		hscrRotateY.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrRotateY_Change();
+			}
+		});
 		
 		txtRotateY = new JTextField("0");
 		txtRotateY.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtRotateY.setBounds(6000, 9720, 855, 285);
+		txtRotateY.setBounds(600, 972, 85, 28);
+		txtRotateY.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtRotateY_Change();
+			}
+		});
 		
 		hscrXTranslate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, -15, 15);
-		hscrXTranslate.setBounds(9240, 3240, 1095, 255);
+		hscrXTranslate.setBounds(924, 324, 109, 25);
+		hscrXTranslate.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrXTranslate_Change();
+			}
+		});
 		
-		hscrZTranslate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, -20, -20);
-		hscrZTranslate.setBounds(9240, 4200, 1095, 255);
+		hscrZTranslate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, -20, 20);
+		hscrZTranslate.setBounds(924, 420, 109, 25);
+		hscrZTranslate.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrZTranslate_Change();
+			}
+		});
 		
 		txtXTranslate = new JTextField("0");
 		txtXTranslate.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtXTranslate.setBounds(9360, 3600, 855, 285);
+		txtXTranslate.setBounds(936, 360, 85, 28);
+		txtXTranslate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtXTranslate_Change();
+			}
+		});
 		
 		txtZTranslate = new JTextField("0");
 		txtZTranslate.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtZTranslate.setBounds(9360, 4560, 855, 285);
+		txtZTranslate.setBounds(936, 456, 85, 28);
+		txtZTranslate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtZTranslate_Change();
+			}
+		});
 		
 		cmdOpenRoute = new JButton("Open");
-		cmdOpenRoute.setBounds(9720, 1920, 735, 315);
+		cmdOpenRoute.setBounds(972, 192, 73, 31);
+		cmdOpenRoute.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cmdOpenRoute_Click();
+			}
+		});
 		
 		cmdSaveRoute = new JButton("Save");
 		cmdSaveRoute.setEnabled(false);
-		cmdSaveRoute.setBounds(9120, 1920, 615, 315);
+		cmdSaveRoute.setBounds(912, 192, 61, 31);
+		cmdSaveRoute.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cmdSaveRoute_Click();
+			}
+		});
 		
 		cmdAutoRobot = new JButton("AutoGo");
-		cmdAutoRobot.setBounds(9360, 2640, 855, 315);
+		cmdAutoRobot.setBounds(936, 264, 85, 31);
+		cmdAutoRobot.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cmdAutoRobot_Click();
+			}
+		});
 		
 		cmdClearCurrentRoute = new JButton("Clear Route");
-		cmdClearCurrentRoute.setBounds(9720, 1440, 735, 495);
+		cmdClearCurrentRoute.setBounds(972, 144, 73, 49);
+		cmdClearCurrentRoute.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cmdClearCurrentRoute_Click();
+			}
+		});
 		
 		cmdNewRoute = new JButton("New Route");
-		cmdNewRoute.setBounds(9120, 1440, 615, 495);
+		cmdNewRoute.setBounds(912, 144, 61, 49);
+		cmdNewRoute.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cmdNewRoute_Click();
+			}
+		});
 		
 		chkMoves = new JCheckBox("Teach Route");
-		chkMoves.setBounds(9120, 480, 1335, 255);
+		chkMoves.setBounds(912, 48, 133, 25);
 		
 		cmdResetRobot = new JButton("Reset");
-		cmdResetRobot.setBounds(9360, 2280, 855, 315);
+		cmdResetRobot.setBounds(936, 228, 85, 31);
+		cmdResetRobot.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cmdResetRobot_Click();
+			}
+		});
 		
 		Timer tmrResetRobot; // Enabled = False, Interval = 50
 		Timer tmrAutoRobot; // Enabled = False, Interval = 100
 		
 		txtOpenClaw = new JTextField("0");
 		txtOpenClaw.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtOpenClaw.setBounds(9360, 9600, 855, 285);
+		txtOpenClaw.setBounds(936, 960, 85, 28);
+		txtOpenClaw.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtOpenClaw_Change();
+			}
+		});
 		
 		txtClawRotate = new JTextField("90");
 		txtClawRotate.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtClawRotate.setBounds(9360, 8640, 855, 285);
+		txtClawRotate.setBounds(936, 864, 85, 28);
+		txtClawRotate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtClawRotate_Change();
+			}
+		});
 		
 		txtArm3 = new JTextField("0");
 		txtArm3.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtArm3.setBounds(9360, 7440, 855, 285);
+		txtArm3.setBounds(936, 744, 85, 28);
+		txtArm3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtArm3_Change();
+			}
+		});
 		
 		txtArm2 = new JTextField("0");
 		txtArm2.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtArm2.setBounds(9360, 6480, 855, 285);
+		txtArm2.setBounds(936, 648, 85, 28);
+		txtArm2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtArm2_Change();
+			}
+		});
 		
 		hscrClawOpen = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, 0, 6);
-		hscrClawOpen.setBounds(9240, 9240, 1095, 255);
+		hscrClawOpen.setBounds(924, 924, 109, 25);
+		hscrClawOpen.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrClawOpen_Change();
+			}
+		});
 		
 		hscrClawRotate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, 0, 180);
 		hscrClawRotate.setUnitIncrement(5);
-		hscrClawRotate.setBounds(9240, 8280, 1095, 255);
+		hscrClawRotate.setBounds(924, 828, 109, 25);
+		hscrClawRotate.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrClawRotate_Change();
+			}
+		});
 		
 		hscrArm3 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, -20, 200);
 		hscrArm3.setUnitIncrement(5);
-		hscrArm3.setBounds(9240, 7080, 1095, 255);
+		hscrArm3.setBounds(924, 708, 109, 25);
+		hscrArm3.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrArm3_Change();
+			}
+		});
 		
 		hscrArm2 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, 0, 180);
 		hscrArm2.setUnitIncrement(5);
-		hscrArm2.setBounds(9240, 6120, 1095, 255);
+		hscrArm2.setBounds(924, 612, 109, 25);
+		hscrArm2.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrArm2_Change();
+			}
+		});
 		
 		hscrArm1 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, -360, 360);
 		hscrArm1.setUnitIncrement(5);
-		hscrArm1.setBounds(9240, 5160, 1095, 255);
+		hscrArm1.setBounds(924, 516, 109, 25);
+		hscrArm1.addAdjustmentListener(new AdjustmentListener() {
+			@Override
+			public void adjustmentValueChanged(AdjustmentEvent e) {
+				hscrArm1_Change();
+			}
+		});
 		
 		txtArm1 = new JTextField("0");
 		txtArm1.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtArm1.setBounds(9360, 5520, 855, 285);
+		txtArm1.setBounds(936, 552, 85, 28);
+		txtArm1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtArm1_Change();
+			}
+		});
 		
 		cmdDrawRobot = new JButton("Drawz :D");
-		cmdDrawRobot.setBounds(9480, 120, 855, 255);
+		cmdDrawRobot.setBounds(948, 12, 85, 25);
+		cmdDrawRobot.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cmdDrawRobot_Click();
+			}
+		});
 
-		renderArea = new JFrame();
-		renderArea.setBounds(0, 0, 9000, 9000);
-		buffer = renderArea.createImage(9000, 9000);
-		pctRobot = buffer.getGraphics();
+		renderArea = new JPanel();
+		renderArea.setBounds(0, 0, 900, 900);
 		
 		Label1 = new JLabel();
 		Label1.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label1.setBounds(1440, 9360, 615, 255);
+		Label1.setBounds(144, 936, 61, 25);
 		
 		Label24 = new JLabel("box middle");
 		Label24.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label24.setBounds(480, 9720, 855, 255);
+		Label24.setBounds(48, 972, 85, 25);
 		
 		Label23 = new JLabel("claw middle");
-		Label23.setBounds(600, 9360, 855, 255);
+		Label23.setBounds(60, 936, 85, 25);
 		
 		Label19 = new JLabel("Number of boxes");
 		Label19.setHorizontalAlignment(SwingConstants.CENTER);
-		Label19.setBounds(7320, 9120, 1455, 255);
+		Label19.setBounds(732, 912, 145, 25);
 		
 		Label22 = new JLabel("Camera Rotation");
 		Label22.setHorizontalAlignment(SwingConstants.CENTER);
-		Label22.setBounds(4920, 9120, 1335, 255);
+		Label22.setBounds(492, 912, 133, 25);
 		
 		Label21 = new JLabel("X");
 		Label21.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label21.setBounds(3960, 9360, 255, 255);
+		Label21.setBounds(396, 936, 25, 25);
 		
 		Label20 = new JLabel("Y");
 		Label20.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label20.setBounds(5520, 9360, 255, 255);
+		Label20.setBounds(552, 936, 25, 25);
 		
 		Label18 = new JLabel();
 		Label18.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label18.setBounds(3120, 9720, 615, 255);
+		Label18.setBounds(312, 972, 61, 25);
 		
 		Label17 = new JLabel();
 		Label17.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label17.setBounds(2280, 9720, 615, 255);
+		Label17.setBounds(228, 972, 61, 25);
 		
 		Label15 = new JLabel("X-Translate");
 		Label15.setHorizontalAlignment(SwingConstants.CENTER);
-		Label15.setBounds(9240, 3000, 1095, 255);
+		Label15.setBounds(924, 300, 109, 25);
 		
 		Label14 = new JLabel("Z-Translate");
 		Label14.setHorizontalAlignment(SwingConstants.CENTER);
-		Label14.setBounds(9240, 3960, 1095, 255);
+		Label14.setBounds(924, 396, 109, 25);
 		
 		lblRouteName = new JLabel();
 		lblRouteName.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRouteName.setBounds(9120, 1080, 1335, 255);
+		lblRouteName.setBounds(912, 108, 133, 25);
 		
 		Label13 = new JLabel("Route Name:");
 		Label13.setHorizontalAlignment(SwingConstants.CENTER);
-		Label13.setBounds(9240, 840, 1095, 255);
+		Label13.setBounds(924, 84, 109, 25);
 		
 		Label12 = new JLabel("Open/Close");
 		Label12.setHorizontalAlignment(SwingConstants.CENTER);
-		Label12.setBounds(9240, 9000, 1095, 255);
+		Label12.setBounds(924, 900, 109, 25);
 		
 		Label11 = new JLabel("Rotate");
 		Label11.setHorizontalAlignment(SwingConstants.CENTER);
-		Label11.setBounds(9240, 8040, 1095, 255);
+		Label11.setBounds(924, 804, 109, 25);
 		
 		Label10 = new JLabel("Claw");
 		Label10.setHorizontalAlignment(SwingConstants.CENTER);
-		Label10.setBounds(9240, 7800, 1095, 255);
+		Label10.setBounds(924, 780, 109, 25);
 		
 		Label9 = new JLabel("Arm3");
 		Label9.setHorizontalAlignment(SwingConstants.CENTER);
-		Label9.setBounds(9240, 6840, 1095, 255);
+		Label9.setBounds(924, 684, 109, 25);
 		
 		Label8 = new JLabel("Arm2");
 		Label8.setHorizontalAlignment(SwingConstants.CENTER);
-		Label8.setBounds(9240, 5880, 1095, 255);
+		Label8.setBounds(924, 588, 109, 25);
 		
 		Label7 = new JLabel("Arm1");
 		Label7.setHorizontalAlignment(SwingConstants.CENTER);
-		Label7.setBounds(9240, 4920, 1095, 255);
+		Label7.setBounds(924, 492, 109, 25);
 		
 		Label6 = new JLabel("z");
-		Label6.setBounds(3360, 9000, 255, 255);
+		Label6.setBounds(336, 900, 25, 25);
 		
 		Label5 = new JLabel("y");
-		Label5.setBounds(2520, 9000, 255, 255);
+		Label5.setBounds(252, 900, 25, 25);
 		
 		Label4 = new JLabel("x");
-		Label4.setBounds(1680, 9000, 255, 255);
+		Label4.setBounds(168, 900, 25, 25);
 		
 		Label3 = new JLabel();
 		Label3.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label3.setBounds(3120, 9360, 615, 255);
+		Label3.setBounds(312, 936, 61, 25);
 		
 		Label2 = new JLabel();
 		Label2.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label2.setBounds(2280, 9360, 615, 255);
+		Label2.setBounds(228, 936, 61, 25);
 		
 		Label16 = new JLabel();
 		Label16.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label16.setBounds(1440, 9720, 615, 255);
+		Label16.setBounds(144, 972, 61, 25);
+		
+		add(txtNumberBoxes);
+		add(hscrRotateX);
+		add(txtRotateX);
+		add(hscrRotateY);
+		add(txtRotateY);
+		add(hscrXTranslate);
+		add(hscrZTranslate);
+		add(txtXTranslate);
+		add(txtZTranslate);
+		add(cmdOpenRoute);
+		add(cmdSaveRoute);
+		add(cmdAutoRobot);
+		add(cmdClearCurrentRoute);
+		add(cmdNewRoute);
+		add(chkMoves);
+		add(cmdResetRobot);
+		add(txtOpenClaw);
+		add(txtClawRotate);
+		add(txtArm3);
+		add(txtArm2);
+		add(hscrClawOpen);
+		add(hscrClawRotate);
+		add(hscrArm3);
+		add(hscrArm2);
+		add(hscrArm1);
+		add(txtArm1);
+		add(cmdDrawRobot);
+		add(renderArea);
+		add(Label1);
+		add(Label24);
+		add(Label23);
+		add(Label19);
+		add(Label22);
+		add(Label21);
+		add(Label20);
+		add(Label18);
+		add(Label17);
+		add(Label15);
+		add(Label14);
+		add(lblRouteName);
+		add(Label13);
+		add(Label12);
+		add(Label11);
+		add(Label10);
+		add(Label9);
+		add(Label8);
+		add(Label7);
+		add(Label6);
+		add(Label5);
+		add(Label4);
+		add(Label3);
+		add(Label2);
+		add(Label16);
 	}
 	
 	private void chkMoves_Click() {
@@ -479,6 +728,8 @@ public class Form {
 		
 		get_middle_box();
 		get_middle_claw();
+		
+		repaint();
 	}
 	
 	private void cmdAutoRobot_Click() {
@@ -654,11 +905,12 @@ public class Form {
 		Save_route(route);
 	}
 	
-	private void Form_Unload(int Cancel) {
+	private void Form_Unload() {
 		if (!lblRouteName.getText().isEmpty() && yesNo("Save current route?")) {
 			cmdSaveRoute_Click();
 		}
 		
+		dispose();
 		System.exit(0);
 	}
 	
@@ -686,6 +938,8 @@ public class Form {
 		}
 		
 		txtArm1.setText(String.valueOf(hscrArm1.getValue()));
+		
+		repaint();
 	}
 	
 	private void hscrArm2_Change() {
@@ -712,6 +966,8 @@ public class Form {
 		}
 		
 		txtArm2.setText(String.valueOf(hscrArm2.getValue()));
+		
+		repaint();
 	}
 	
 	private void hscrArm3_Change() {
@@ -738,6 +994,8 @@ public class Form {
 		}
 		
 		txtArm3.setText(String.valueOf(hscrArm3.getValue()));
+		
+		repaint();
 	}
 	
 	private void hscrClawRotate_Change() {
@@ -764,6 +1022,8 @@ public class Form {
 		}
 		
 		txtClawRotate.setText(String.valueOf(hscrClawRotate.getValue()));
+		
+		repaint();
 	}
 	
 	private void hscrClawOpen_Change() {
@@ -821,6 +1081,8 @@ public class Form {
 		}
 		
 		txtOpenClaw.setText(String.valueOf(hscrClawOpen.getValue() / 10));
+		
+		repaint();
 	}
 	
 	private void hscrXTranslate_Change() {
@@ -847,6 +1109,8 @@ public class Form {
 		getjoints();
 		
 		txtXTranslate.setText(String.valueOf(hscrXTranslate.getValue()));
+		
+		repaint();
 	}
 	
 	private void hscrZTranslate_Change() {
@@ -873,6 +1137,8 @@ public class Form {
 		getjoints();
 		
 		txtZTranslate.setText(String.valueOf(hscrZTranslate.getValue()));
+		
+		repaint();
 	}
 	
 	private void lblRouteName_Change() {
@@ -898,6 +1164,8 @@ public class Form {
 			mousex = x;
 			mousey = y;
 		}
+		
+		repaint();
 	}
 	
 	private void hscrRotateX_Change() {
@@ -910,6 +1178,8 @@ public class Form {
 		}
 		
 		txtRotateX.setText(String.valueOf(hscrRotateX.getValue()));
+		
+		repaint();
 	}
 	
 	private void hscrRotateY_Change() {
@@ -922,12 +1192,16 @@ public class Form {
 		}
 		
 		txtRotateY.setText(String.valueOf(hscrRotateY.getValue()));
+		
+		repaint();
 	}
 	
 	private void txtNumberBoxes_Change() {
 		if (Integer.parseInt(txtNumberBoxes.getText()) < 1
 				|| Integer.parseInt(txtNumberBoxes.getText()) > 10) {
 			txtNumberBoxes.setText(String.valueOf(number_boxes));
+			
+			repaint();
 		}
 	}
 	
@@ -940,6 +1214,8 @@ public class Form {
 			txtRotateY.setText("0");
 			hscrRotateY.setValue(0);
 		}
+		
+		repaint();
 	}
 	
 	private void tmrAutoRobot_Timer() {
@@ -991,6 +1267,8 @@ public class Form {
 		if (s > e) {
 			tmrAutoRobot.stop();
 		}
+		
+		repaint();
 	}
 	
 	private void tmrResetRobot_Timer() {
@@ -1052,6 +1330,8 @@ public class Form {
 				&& hscrZTranslate.getValue() == 0) {
 			tmrResetRobot.stop();
 		}
+		
+		repaint();
 	}
 	
 	private void txtArm1_Change() {
@@ -1189,6 +1469,18 @@ public class Form {
 			
 			b[i].draw(pctRobot);
 			b[i].givejoints();
+		}
+	}
+	
+	@Override
+	public void update(Graphics g) {
+		
+	}
+	
+	@Override
+	public void paint(Graphics g) {
+		synchronized (buffer) {
+			g.drawImage(buffer, 0, 0, this);
 		}
 	}
 	

@@ -61,8 +61,12 @@ public class Robot {
 	public double joint_y3;
 	public double joint_z3;
 	
-	private int width = 500;
-	private int height = 500;
+	private int width = 900;
+	private int height = 900;
+	
+	public Robot() {
+		initialize();
+	}
 	
 	public void initialize() {
 		vertex_count = 0;
@@ -79,6 +83,22 @@ public class Robot {
 		rotate_factorZ3 = 0;
 		camera_x = 0;
 		camera_y = 0;
+		
+		for (int i = 0; i < vertex.length; i++) {
+			vertex[i] = new point_c();
+		}
+		
+		for (int i = 0; i < vertex_p.length; i++) {
+			vertex_p[i] = new point_p();
+		}
+		
+		for (int i = 0; i < lines.length; i++) {
+			lines[i] = new line();
+		}
+		
+		for (int i = 0; i < joint.length; i++) {
+			joint[i] = new point_c();
+		}
 	}
 	
 	public void base() {

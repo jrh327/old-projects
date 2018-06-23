@@ -56,11 +56,19 @@ public class Box {
 	public double joint_y3;
 	public double joint_z3;
 
-	private int width = 500;
-	private int height = 500;
+	private int width = 900;
+	private int height = 900;
 	
 	public void initialize() {
 		double bx, bz;
+		
+		for (int i = 0; i < vertex.length; i++) {
+			vertex[i] = new point_c();
+		}
+		
+		for (int i = 0; i < lines.length; i++) {
+			lines[i] = new line();
+		}
 		
 		vertex_count = 0;
 		line_count = 0;
@@ -117,6 +125,10 @@ public class Box {
 	}
 	
 	public void initialize_joints() {
+		for (int i = 0; i < joint.length; i++) {
+			joint[i] = new point_c();
+		}
+		
 		joint[0].x = 0; joint[0].y = 0; joint[0].z = 0;
 		joint[1].x = 0; joint[1].y = 5.4; joint[1].z = 0;
 		joint[2].x = 7.8; joint[2].y = 5.4; joint[2].z = 0;
