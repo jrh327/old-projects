@@ -55,9 +55,9 @@ public class Box {
 	public double joint_x3;
 	public double joint_y3;
 	public double joint_z3;
-
-	private int width = 900;
-	private int height = 900;
+	
+	private int width = 800;
+	private int height = 800;
 	
 	public void initialize() {
 		double bx, bz;

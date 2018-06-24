@@ -1,11 +1,20 @@
 package net.jonhopkins.robot;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -13,6 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -24,6 +34,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.border.BevelBorder;
 
 public class Form extends JFrame {
 	private static final long serialVersionUID = -6031794944802349379L;
@@ -84,6 +95,9 @@ public class Form extends JFrame {
 	JLabel Label3; // Right Justify, BorderStyle = Fixed Single
 	JLabel Label2; // Right Justify, BorderStyle = Fixed Single
 	JLabel Label16; // Right Justify, BorderStyle = Fixed Single
+	
+	private final int RENDER_WIDTH = 800;
+	private final int RENDER_HEIGHT = 800;
 	
 	Robot r;
 	Box[] b = new Box[10];
@@ -187,12 +201,8 @@ public class Form extends JFrame {
 	public void init() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				setUpWindow();
 				setUpComponents();
-				buffer = renderArea.createImage(900, 900);
-				pctRobot = buffer.getGraphics();
-				
-				repaint();
+				setUpWindow();
 			}
 		});
 	}
@@ -206,15 +216,14 @@ public class Form extends JFrame {
 			}
 		});
 		
-		setSize(1053, 1017);
 		setLocationRelativeTo(null);
+		pack();
 		setVisible(true);
 	}
 	
 	public void setUpComponents() {
 		txtNumberBoxes = new JTextField("5");
 		txtNumberBoxes.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtNumberBoxes.setBounds(756, 936, 97, 28);
 		txtNumberBoxes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -224,7 +233,6 @@ public class Form extends JFrame {
 		
 		hscrRotateX = new JScrollBar(SwingConstants.HORIZONTAL, 0, 20, 0, 75);
 		hscrRotateX.setUnitIncrement(5);
-		hscrRotateX.setBounds(432, 936, 109, 25);
 		hscrRotateX.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -234,11 +242,9 @@ public class Form extends JFrame {
 		
 		txtRotateX = new JTextField("0");
 		txtRotateX.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtRotateX.setBounds(444, 972, 85, 28);
 		
 		hscrRotateY = new JScrollBar(SwingConstants.HORIZONTAL, 0, 20, 0, 360);
 		hscrRotateY.setUnitIncrement(5);
-		hscrRotateY.setBounds(588, 936, 109, 25);
 		hscrRotateY.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -248,7 +254,6 @@ public class Form extends JFrame {
 		
 		txtRotateY = new JTextField("0");
 		txtRotateY.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtRotateY.setBounds(600, 972, 85, 28);
 		txtRotateY.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -257,7 +262,6 @@ public class Form extends JFrame {
 		});
 		
 		hscrXTranslate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, -15, 15);
-		hscrXTranslate.setBounds(924, 324, 109, 25);
 		hscrXTranslate.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -266,7 +270,6 @@ public class Form extends JFrame {
 		});
 		
 		hscrZTranslate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, -20, 20);
-		hscrZTranslate.setBounds(924, 420, 109, 25);
 		hscrZTranslate.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -276,7 +279,6 @@ public class Form extends JFrame {
 		
 		txtXTranslate = new JTextField("0");
 		txtXTranslate.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtXTranslate.setBounds(936, 360, 85, 28);
 		txtXTranslate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -286,7 +288,6 @@ public class Form extends JFrame {
 		
 		txtZTranslate = new JTextField("0");
 		txtZTranslate.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtZTranslate.setBounds(936, 456, 85, 28);
 		txtZTranslate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -295,7 +296,6 @@ public class Form extends JFrame {
 		});
 		
 		cmdOpenRoute = new JButton("Open");
-		cmdOpenRoute.setBounds(972, 192, 73, 31);
 		cmdOpenRoute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -305,7 +305,6 @@ public class Form extends JFrame {
 		
 		cmdSaveRoute = new JButton("Save");
 		cmdSaveRoute.setEnabled(false);
-		cmdSaveRoute.setBounds(912, 192, 61, 31);
 		cmdSaveRoute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -314,7 +313,6 @@ public class Form extends JFrame {
 		});
 		
 		cmdAutoRobot = new JButton("AutoGo");
-		cmdAutoRobot.setBounds(936, 264, 85, 31);
 		cmdAutoRobot.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -323,7 +321,6 @@ public class Form extends JFrame {
 		});
 		
 		cmdClearCurrentRoute = new JButton("Clear Route");
-		cmdClearCurrentRoute.setBounds(972, 144, 73, 49);
 		cmdClearCurrentRoute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -332,7 +329,6 @@ public class Form extends JFrame {
 		});
 		
 		cmdNewRoute = new JButton("New Route");
-		cmdNewRoute.setBounds(912, 144, 61, 49);
 		cmdNewRoute.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -341,10 +337,14 @@ public class Form extends JFrame {
 		});
 		
 		chkMoves = new JCheckBox("Teach Route");
-		chkMoves.setBounds(912, 48, 133, 25);
+		chkMoves.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				chkMoves_Click();
+			}
+		});
 		
 		cmdResetRobot = new JButton("Reset");
-		cmdResetRobot.setBounds(936, 228, 85, 31);
 		cmdResetRobot.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -367,7 +367,6 @@ public class Form extends JFrame {
 		
 		txtOpenClaw = new JTextField("0");
 		txtOpenClaw.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtOpenClaw.setBounds(936, 960, 85, 28);
 		txtOpenClaw.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -377,7 +376,6 @@ public class Form extends JFrame {
 		
 		txtClawRotate = new JTextField("90");
 		txtClawRotate.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtClawRotate.setBounds(936, 864, 85, 28);
 		txtClawRotate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -387,7 +385,6 @@ public class Form extends JFrame {
 		
 		txtArm3 = new JTextField("0");
 		txtArm3.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtArm3.setBounds(936, 744, 85, 28);
 		txtArm3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -397,7 +394,6 @@ public class Form extends JFrame {
 		
 		txtArm2 = new JTextField("0");
 		txtArm2.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtArm2.setBounds(936, 648, 85, 28);
 		txtArm2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -406,7 +402,6 @@ public class Form extends JFrame {
 		});
 		
 		hscrClawOpen = new JScrollBar(SwingConstants.HORIZONTAL, 0, 0, 0, 6);
-		hscrClawOpen.setBounds(924, 924, 109, 25);
 		hscrClawOpen.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -416,7 +411,6 @@ public class Form extends JFrame {
 		
 		hscrClawRotate = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, 0, 180);
 		hscrClawRotate.setUnitIncrement(5);
-		hscrClawRotate.setBounds(924, 828, 109, 25);
 		hscrClawRotate.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -426,7 +420,6 @@ public class Form extends JFrame {
 		
 		hscrArm3 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, -20, 200);
 		hscrArm3.setUnitIncrement(5);
-		hscrArm3.setBounds(924, 708, 109, 25);
 		hscrArm3.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -436,7 +429,6 @@ public class Form extends JFrame {
 		
 		hscrArm2 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, 0, 180);
 		hscrArm2.setUnitIncrement(5);
-		hscrArm2.setBounds(924, 612, 109, 25);
 		hscrArm2.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -446,7 +438,6 @@ public class Form extends JFrame {
 		
 		hscrArm1 = new JScrollBar(SwingConstants.HORIZONTAL, 0, 5, -360, 360);
 		hscrArm1.setUnitIncrement(5);
-		hscrArm1.setBounds(924, 516, 109, 25);
 		hscrArm1.addAdjustmentListener(new AdjustmentListener() {
 			@Override
 			public void adjustmentValueChanged(AdjustmentEvent e) {
@@ -456,7 +447,6 @@ public class Form extends JFrame {
 		
 		txtArm1 = new JTextField("0");
 		txtArm1.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtArm1.setBounds(936, 552, 85, 28);
 		txtArm1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -465,166 +455,238 @@ public class Form extends JFrame {
 		});
 		
 		cmdDrawRobot = new JButton("Drawz :D");
-		cmdDrawRobot.setBounds(948, 12, 85, 25);
 		cmdDrawRobot.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cmdDrawRobot_Click();
 			}
 		});
-
-		renderArea = new JPanel();
-		renderArea.setBounds(0, 0, 900, 900);
+		
+		renderArea = new JPanel() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public void paint(Graphics g) {
+				if (buffer == null) {
+					buffer = renderArea.createImage(RENDER_WIDTH, RENDER_HEIGHT);
+					pctRobot = buffer.getGraphics();
+				}
+				synchronized (buffer) {
+					g.drawImage(buffer, 0, 0, this);
+				}
+			}
+		};
+		renderArea.setPreferredSize(new Dimension(RENDER_WIDTH, RENDER_HEIGHT));
+		renderArea.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				pctRobot_MouseDown(e.getButton(), e.getModifiers(), e.getX(), e.getY());
+			}
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				
+			}
+		});
+		renderArea.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				pctRobot_MouseMove(e.getButton(), e.getModifiers(), e.getX(), e.getY());
+			}
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				
+			}
+		});
 		
 		Label1 = new JLabel();
 		Label1.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label1.setBounds(144, 936, 61, 25);
 		
 		Label24 = new JLabel("box middle");
 		Label24.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label24.setBounds(48, 972, 85, 25);
 		
 		Label23 = new JLabel("claw middle");
-		Label23.setBounds(60, 936, 85, 25);
 		
 		Label19 = new JLabel("Number of boxes");
 		Label19.setHorizontalAlignment(SwingConstants.CENTER);
-		Label19.setBounds(732, 912, 145, 25);
 		
 		Label22 = new JLabel("Camera Rotation");
 		Label22.setHorizontalAlignment(SwingConstants.CENTER);
-		Label22.setBounds(492, 912, 133, 25);
 		
-		Label21 = new JLabel("X");
+		Label21 = new JLabel("X: ");
 		Label21.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label21.setBounds(396, 936, 25, 25);
 		
-		Label20 = new JLabel("Y");
+		Label20 = new JLabel("Y: ");
 		Label20.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label20.setBounds(552, 936, 25, 25);
 		
 		Label18 = new JLabel();
 		Label18.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label18.setBounds(312, 972, 61, 25);
 		
 		Label17 = new JLabel();
 		Label17.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label17.setBounds(228, 972, 61, 25);
 		
 		Label15 = new JLabel("X-Translate");
 		Label15.setHorizontalAlignment(SwingConstants.CENTER);
-		Label15.setBounds(924, 300, 109, 25);
 		
 		Label14 = new JLabel("Z-Translate");
 		Label14.setHorizontalAlignment(SwingConstants.CENTER);
-		Label14.setBounds(924, 396, 109, 25);
 		
 		lblRouteName = new JLabel("");
 		lblRouteName.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRouteName.setBounds(912, 108, 133, 25);
+		lblRouteName.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		
 		Label13 = new JLabel("Route Name:");
 		Label13.setHorizontalAlignment(SwingConstants.CENTER);
-		Label13.setBounds(924, 84, 109, 25);
 		
 		Label12 = new JLabel("Open/Close");
 		Label12.setHorizontalAlignment(SwingConstants.CENTER);
-		Label12.setBounds(924, 900, 109, 25);
 		
 		Label11 = new JLabel("Rotate");
 		Label11.setHorizontalAlignment(SwingConstants.CENTER);
-		Label11.setBounds(924, 804, 109, 25);
 		
 		Label10 = new JLabel("Claw");
 		Label10.setHorizontalAlignment(SwingConstants.CENTER);
-		Label10.setBounds(924, 780, 109, 25);
 		
 		Label9 = new JLabel("Arm3");
 		Label9.setHorizontalAlignment(SwingConstants.CENTER);
-		Label9.setBounds(924, 684, 109, 25);
 		
 		Label8 = new JLabel("Arm2");
 		Label8.setHorizontalAlignment(SwingConstants.CENTER);
-		Label8.setBounds(924, 588, 109, 25);
 		
 		Label7 = new JLabel("Arm1");
 		Label7.setHorizontalAlignment(SwingConstants.CENTER);
-		Label7.setBounds(924, 492, 109, 25);
 		
 		Label6 = new JLabel("z");
-		Label6.setBounds(336, 900, 25, 25);
+		Label6.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		Label5 = new JLabel("y");
-		Label5.setBounds(252, 900, 25, 25);
+		Label5.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		Label4 = new JLabel("x");
-		Label4.setBounds(168, 900, 25, 25);
+		Label4.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		Label3 = new JLabel();
 		Label3.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label3.setBounds(312, 936, 61, 25);
 		
 		Label2 = new JLabel();
 		Label2.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label2.setBounds(228, 936, 61, 25);
 		
 		Label16 = new JLabel();
 		Label16.setHorizontalAlignment(SwingConstants.RIGHT);
-		Label16.setBounds(144, 972, 61, 25);
 		
-		add(txtNumberBoxes);
-		add(hscrRotateX);
-		add(txtRotateX);
-		add(hscrRotateY);
-		add(txtRotateY);
-		add(hscrXTranslate);
-		add(hscrZTranslate);
-		add(txtXTranslate);
-		add(txtZTranslate);
-		add(cmdOpenRoute);
-		add(cmdSaveRoute);
-		add(cmdAutoRobot);
-		add(cmdClearCurrentRoute);
-		add(cmdNewRoute);
-		add(chkMoves);
-		add(cmdResetRobot);
-		add(txtOpenClaw);
-		add(txtClawRotate);
-		add(txtArm3);
-		add(txtArm2);
-		add(hscrClawOpen);
-		add(hscrClawRotate);
-		add(hscrArm3);
-		add(hscrArm2);
-		add(hscrArm1);
-		add(txtArm1);
-		add(cmdDrawRobot);
-		add(renderArea);
-		add(Label1);
-		add(Label24);
-		add(Label23);
-		add(Label19);
-		add(Label22);
-		add(Label21);
-		add(Label20);
-		add(Label18);
-		add(Label17);
-		add(Label15);
-		add(Label14);
-		add(lblRouteName);
-		add(Label13);
-		add(Label12);
-		add(Label11);
-		add(Label10);
-		add(Label9);
-		add(Label8);
-		add(Label7);
-		add(Label6);
-		add(Label5);
-		add(Label4);
-		add(Label3);
-		add(Label2);
-		add(Label16);
+		JPanel bottomControls = new JPanel(new FlowLayout());
+		
+		JPanel mids = new JPanel(new GridLayout(3, 4));
+		// row 1
+		mids.add(new JPanel());
+		mids.add(Label4);
+		mids.add(Label5);
+		mids.add(Label6);
+		// row 2
+		mids.add(Label23);
+		mids.add(Label1);
+		mids.add(Label2);
+		mids.add(Label3);
+		// row 3
+		mids.add(Label24);
+		mids.add(Label16);
+		mids.add(Label17);
+		mids.add(Label18);
+		bottomControls.add(mids);
+		
+		JPanel camera = new JPanel(new BorderLayout());
+		JPanel cameraControls = new JPanel(new GridLayout(2, 4));
+		// row 1
+		cameraControls.add(Label21);
+		cameraControls.add(hscrRotateX);
+		cameraControls.add(Label20);
+		cameraControls.add(hscrRotateY);
+		// row 2
+		cameraControls.add(new JPanel());
+		cameraControls.add(txtRotateX);
+		cameraControls.add(new JPanel());
+		cameraControls.add(txtRotateY);
+		
+		camera.add(Label22, BorderLayout.NORTH);
+		camera.add(cameraControls, BorderLayout.CENTER);
+		bottomControls.add(camera);
+		
+		JPanel boxes = new JPanel(new GridLayout(3, 1));
+		boxes.add(Label19);
+		boxes.add(txtNumberBoxes);
+		boxes.add(new JPanel());
+		bottomControls.add(boxes);
+		
+		JPanel renderPanel = new JPanel(new BorderLayout());
+		renderPanel.add(renderArea, BorderLayout.CENTER);
+		renderPanel.add(bottomControls, BorderLayout.SOUTH);
+		
+		JPanel sideControls = new JPanel(new GridLayout(0, 1));
+		sideControls.add(cmdDrawRobot);
+		sideControls.add(chkMoves);
+		sideControls.add(Label13);
+		sideControls.add(lblRouteName);
+		
+		JPanel routes1 = new JPanel(new GridLayout(1, 2));
+		routes1.add(cmdNewRoute);
+		routes1.add(cmdClearCurrentRoute);
+		sideControls.add(routes1);
+		
+		JPanel routes2 = new JPanel(new GridLayout(1, 2));
+		routes2.add(cmdSaveRoute);
+		routes2.add(cmdOpenRoute);
+		sideControls.add(routes2);
+		sideControls.add(cmdResetRobot);
+		sideControls.add(cmdAutoRobot);
+		
+		sideControls.add(Label15);
+		sideControls.add(hscrXTranslate);
+		sideControls.add(txtXTranslate);
+		
+		sideControls.add(Label14);
+		sideControls.add(hscrZTranslate);
+		sideControls.add(txtZTranslate);
+		
+		sideControls.add(Label7);
+		sideControls.add(hscrArm1);
+		sideControls.add(txtArm1);
+		
+		sideControls.add(Label8);
+		sideControls.add(hscrArm2);
+		sideControls.add(txtArm2);
+		
+		sideControls.add(Label9);
+		sideControls.add(hscrArm3);
+		sideControls.add(txtArm3);
+		
+		sideControls.add(Label10);
+		sideControls.add(Label11);
+		sideControls.add(hscrClawRotate);
+		sideControls.add(txtClawRotate);
+		
+		sideControls.add(Label12);
+		sideControls.add(hscrClawOpen);
+		sideControls.add(txtOpenClaw);
+		
+		setLayout(new FlowLayout());
+		add(renderPanel);
+		add(sideControls);
 	}
 	
 	private void chkMoves_Click() {
@@ -718,7 +780,7 @@ public class Form extends JFrame {
 		number_moves = 0; // new route, so set number_moves to 0
 		number_boxes = Integer.parseInt(txtNumberBoxes.getText());
 		
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.initialize();
 		r.base();
@@ -805,6 +867,7 @@ public class Form extends JFrame {
 		number_moves = 0;
 		
 		lblRouteName.setText(route_name);
+		lblRouteName_Change();
 		cmdSaveRoute.setEnabled(true);
 	}
 	
@@ -876,6 +939,7 @@ public class Form extends JFrame {
 		if (!fileExists(filename)) {
 			if (yesNo("File does not exist! Would you like to create the route?")) {
 				lblRouteName.setText(route_name);
+				lblRouteName_Change();
 				cmdSaveRoute_Click();
 			}
 			return;
@@ -893,6 +957,7 @@ public class Form extends JFrame {
 		}
 		
 		lblRouteName.setText(route_name);
+		lblRouteName_Change();
 	}
 	
 	private void cmdResetRobot_Click() {
@@ -935,7 +1000,7 @@ public class Form extends JFrame {
 			number_moves = number_moves + 1;
 		}
 		
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.super_rotate(pctRobot, 1, hscrArm1.getValue(), 0, 0, 0, 0);
 		
@@ -963,7 +1028,7 @@ public class Form extends JFrame {
 			number_moves = number_moves + 1;
 		}
 		
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.super_rotate(pctRobot, 2, 0, hscrArm2.getValue(), 0, 0, 0);
 		
@@ -991,7 +1056,7 @@ public class Form extends JFrame {
 			number_moves = number_moves + 1;
 		}
 		
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.super_rotate(pctRobot, 3, 0, 0, hscrArm3.getValue(), 0, 0);
 		
@@ -1019,7 +1084,7 @@ public class Form extends JFrame {
 			number_moves = number_moves + 1;
 		}
 		
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.super_rotate(pctRobot, 4, 0, 0, 0,  hscrClawRotate.getValue() - 90, 0);
 		
@@ -1059,7 +1124,7 @@ public class Form extends JFrame {
 		get_middle_box();
 		get_middle_claw();
 		
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.super_rotate(pctRobot, 5, 0, 0, 0, 0, (hscrClawOpen.getValue() / 10) - Integer.parseInt(txtOpenClaw.getText()));
 		for (int i = 0; i < number_boxes; i++) {
@@ -1106,7 +1171,7 @@ public class Form extends JFrame {
 			number_moves = number_moves + 1;
 		}
 		
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.translate_x(pctRobot, hscrXTranslate.getValue() - Integer.parseInt(txtXTranslate.getText()));
 		
@@ -1134,7 +1199,7 @@ public class Form extends JFrame {
 			number_moves = number_moves + 1;
 		}
 		
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.translate_z(pctRobot, hscrZTranslate.getValue() - Integer.parseInt(txtZTranslate.getText()));
 		
@@ -1179,7 +1244,7 @@ public class Form extends JFrame {
 	}
 	
 	private void hscrRotateX_Change() {
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.camera_rotate(pctRobot, -hscrRotateX.getValue(), 0);
 		
@@ -1193,7 +1258,7 @@ public class Form extends JFrame {
 	}
 	
 	private void hscrRotateY_Change() {
-		pctRobot.clearRect(0, 0, 9000, 9000);
+		pctRobot.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
 		r.camera_rotate(pctRobot, 0, hscrRotateY.getValue());
 		
@@ -1479,18 +1544,6 @@ public class Form extends JFrame {
 			
 			b[i].draw(pctRobot);
 			b[i].givejoints();
-		}
-	}
-	
-	@Override
-	public void update(Graphics g) {
-		
-	}
-	
-	@Override
-	public void paint(Graphics g) {
-		synchronized (buffer) {
-			g.drawImage(buffer, 0, 0, this);
 		}
 	}
 	

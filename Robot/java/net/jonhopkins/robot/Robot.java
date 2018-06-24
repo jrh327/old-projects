@@ -61,8 +61,8 @@ public class Robot {
 	public double joint_y3;
 	public double joint_z3;
 	
-	private int width = 900;
-	private int height = 900;
+	private int width = 800;
+	private int height = 800;
 	
 	public Robot() {
 		initialize();
@@ -118,7 +118,7 @@ public class Robot {
 			lines[line_count + i].p2 = vertex_count + i + 1;
 			if (i == 7) {
 				lines[line_count + i].p1 = vertex_count + i;
-				lines[line_count + i].p2 = vertex_count + 1;
+				lines[line_count + i].p2 = vertex_count;
 			} else if (i == 15) {
 				lines[line_count + i].p1 = vertex_count + i;
 				lines[line_count + i].p2 = vertex_count + 8;
