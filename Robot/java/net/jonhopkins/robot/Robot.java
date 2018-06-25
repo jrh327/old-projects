@@ -814,7 +814,7 @@ public class Robot {
 			vertex[i].x = tempz * Math.sin(radians(theta)) + tempx * Math.cos(radians(theta));
 		}
 		
-		for (int i = 0; i < 3; i++) {
+		for (int i = 1; i < joint.length; i++) {
 			tempx = joint[i].x;
 			tempz = joint[i].z;
 			
@@ -829,19 +829,19 @@ public class Robot {
 		double tempx, tempy, tempz;
 		
 		for (int i = 40; i < vertex_count; i++) {
-			tempx = vertex[i].x - joint[0].x;
-			tempy = vertex[i].y - joint[0].y;
+			tempx = vertex[i].x - joint[1].x;
+			tempy = vertex[i].y - joint[1].y;
 			
-			vertex[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[0].x;
-			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[0].y;
+			vertex[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[1].x;
+			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[1].y;
 		}
 		
-		for (int i = 1; i < 3; i++) {
+		for (int i = 1; i < joint.length; i++) {
 			tempx = joint[i].x - joint[1].x;
-			tempy = joint[i].y - joint[0].y;
+			tempy = joint[i].y - joint[1].y;
 			
-			joint[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[0].x;
-			joint[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[0].y;
+			joint[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[1].x;
+			joint[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[1].y;
 		}
 		
 		rotate_factorZ = theta;
@@ -851,18 +851,18 @@ public class Robot {
 		double tempx, tempy, tempz;
 		
 		for (int i = 72; i < vertex_count; i++) {
-			tempx = vertex[i].x - joint[1].x;
-			tempy = vertex[i].y - joint[1].y;
+			tempx = vertex[i].x - joint[2].x;
+			tempy = vertex[i].y - joint[2].y;
 			
-			vertex[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[1].x;
-			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[1].y;
+			vertex[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[2].x;
+			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[2].y;
 		}
 		
-		tempx = joint[2].x - joint[1].x;
-		tempy = joint[2].y - joint[1].y;
+		tempx = joint[3].x - joint[2].x;
+		tempy = joint[3].y - joint[2].y;
 		
-		joint[2].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[1].x;
-		joint[2].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[1].y;
+		joint[3].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[2].x;
+		joint[3].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[2].y;
 		
 		rotate_factorZ2 = theta;
 	}
@@ -871,11 +871,11 @@ public class Robot {
 		double tempx, tempy, tempz;
 		
 		for (int i = 96; i < vertex_count; i++) {
-			tempy = vertex[i].y - joint[2].y;
-			tempz = vertex[i].z - joint[2].z;
+			tempy = vertex[i].y - joint[3].y;
+			tempz = vertex[i].z - joint[3].z;
 			
-			vertex[i].y = tempy * Math.cos(radians(theta)) - tempz * Math.sin(radians(theta)) + joint[2].y;
-			vertex[i].z = tempy * Math.sin(radians(theta)) + tempz * Math.cos(radians(theta)) + joint[2].z;
+			vertex[i].y = tempy * Math.cos(radians(theta)) - tempz * Math.sin(radians(theta)) + joint[3].y;
+			vertex[i].z = tempy * Math.sin(radians(theta)) + tempz * Math.cos(radians(theta)) + joint[3].z;
 		}
 		
 		rotate_factorY3 = theta;
@@ -915,24 +915,28 @@ public class Robot {
 		vertex_count = 0;
 		line_count = 0;
 		
+		double tempTranslateX = joint[0].x;
+		double tempTranslateZ = joint[0].z;
+		
 		base();
 		arm();
 		arm2();
 		arm3();
 		thingy_with_the_grabby();
-		// initialize_joints();
+		initialize_joints();
 		
 		rotate_claw(pct, rotate_factorY3);
 		rotate_arm3(pct, rotate_factorZ2);
 		rotate_arm2(pct, rotate_factorZ);
 		rotate_arm1(pct, rotate_factorY);
 		
-/*
 		// redo translation
+		joint[0].x = tempTranslateX;
+		joint[0].z = tempTranslateZ;
 		for (int i = 0; i < vertex_count; i++) {
 			vertex[i].x = vertex[i].x + joint[0].x;
 			vertex[i].z = vertex[i].z + joint[0].z;
-			if (i < 4) {
+			if (i > 0 && i < joint.length) {
 				joint[i].x = joint[i].x + joint[0].x;
 				joint[i].z = joint[i].z + joint[0].z;
 			}
@@ -943,17 +947,16 @@ public class Robot {
 			tempx = vertex[i].x;
 			tempz = vertex[i].z;
 			
-			vertex[i].z = tempz * Cos(radians(camera_y)) - tempx * Sin(radians(camera_y));
-			vertex[i].x = tempz * Sin(radians(camera_y)) + tempx * Cos(radians(camera_y));
+			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
+			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
 		}
 		for (int i = 0; i < vertex_count; i++) {
 			tempy = vertex[i].y;
 			tempz = vertex[i].z;
 			
-			vertex[i].y = tempy * Cos(radians(camera_x)) - tempz * Sin(radians(camera_x));
-			vertex[i].z = tempy * Sin(radians(camera_x)) + tempz * Cos(radians(camera_x));
+			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
+			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
 		}
-*/
 		
 		draw(pct);
 	}
@@ -1049,7 +1052,7 @@ public class Robot {
 		// translate
 		for (int i = 0; i < vertex_count; i++) {
 			vertex[i].x = vertex[i].x + x_change;
-			if (i < 4) {
+			if (i < joint.length) {
 				joint[i].x = joint[i].x + x_change;
 			}
 		}
@@ -1095,7 +1098,7 @@ public class Robot {
 		// translate
 		for (int i = 0; i < vertex_count; i++) {
 			vertex[i].z = vertex[i].z + z_change;
-			if (i < 4) {
+			if (i < joint.length) {
 				joint[i].z = joint[i].z + z_change;
 			}
 		}

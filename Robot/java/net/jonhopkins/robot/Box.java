@@ -182,7 +182,7 @@ public class Box {
 			vertex[i].x = tempz * Math.sin(radians(theta)) + tempx * Math.cos(radians(theta));
 		}
 		
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < joint.length; i++) {
 			tempx = joint[i].x;
 			tempz = joint[i].z;
 			
@@ -202,8 +202,8 @@ public class Box {
 			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[0].y;
 		}
 		
-		for (int i = 1; i < 3; i++) {
-			tempx = joint[i].x - joint[1].x;
+		for (int i = 1; i < joint.length; i++) {
+			tempx = joint[i].x - joint[0].x;
 			tempy = joint[i].y - joint[0].y;
 			
 			joint[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[0].x;
@@ -269,7 +269,7 @@ public class Box {
 		// translate
 		for (int i = 0; i < vertex_count; i++) {
 			vertex[i].x = vertex[i].x + x_change;
-			if (i < 4) {
+			if (i < joint.length) {
 				joint[i].x = joint[i].x + x_change;
 			}
 		}
@@ -315,7 +315,7 @@ public class Box {
 		// translate
 		for (int i = 0; i < vertex_count; i++) {
 			vertex[i].z = vertex[i].z + z_change;
-			if (i < 4) {
+			if (i < joint.length) {
 				joint[i].z = joint[i].z + z_change;
 			}
 		}
@@ -478,27 +478,31 @@ public class Box {
 		rotate_with_arm2(pct, rotate_factorZ);
 		rotate_with_arm1(pct, rotate_factorY);
 		
-	//     // redo translation
-	//     For i = 1 To vertex_count
-	//         vertex(i).x = vertex(i).x + joint[0].x
-	//         vertex(i).z = vertex(i).z + joint[0].z
-	//         If i < 4 Then joint(i).x = joint(i).x + joint[0].x
-	//         If i < 4 Then joint(i).z = joint(i).z + joint[0].z
-	//     Next i
-	// 
-	//     // redo camera rotation
-	//     For i = 1 To vertex_count
-	//         tempx = vertex(i).x; tempz = vertex(i).z
-	// 
-	//         vertex(i).z = tempz * Cos(radians(camera_y)) - tempx * Sin(radians(camera_y))
-	//         vertex(i).x = tempz * Sin(radians(camera_y)) + tempx * Cos(radians(camera_y))
-	//     Next i
-	//     For i = 1 To vertex_count
-	//         tempy = vertex(i).y; tempz = vertex(i).z
-	// 
-	//         vertex(i).y = tempy * Cos(radians(camera_x)) - tempz * Sin(radians(camera_x))
-	//         vertex(i).z = tempy * Sin(radians(camera_x)) + tempz * Cos(radians(camera_x))
-	//     Next i
+		// redo translation
+		for (int i = 0; i < vertex_count; i++) {
+			vertex[i].x = vertex[i].x + joint[0].x;
+			vertex[i].z = vertex[i].z + joint[0].z;
+			if (i < joint.length) {
+				joint[i].x = joint[i].x + joint[0].x;
+				joint[i].z = joint[i].z + joint[0].z;
+			}
+		}
+		
+		// redo camera rotation
+		for (int i = 0; i < vertex_count; i++) {
+			tempx = vertex[i].x;
+			tempz = vertex[i].z;
+			
+			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
+			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
+		}
+		for (int i = 0; i < vertex_count; i++) {
+			tempy = vertex[i].y;
+			tempz = vertex[i].z;
+			
+			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
+			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
+		}
 		
 		draw(pct);
 	}
