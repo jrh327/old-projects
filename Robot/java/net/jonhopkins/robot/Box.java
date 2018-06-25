@@ -13,10 +13,6 @@ public class Box {
 	private class line {
 		int p1;
 		int p2;
-		
-		int r;
-		int g;
-		int b;
 	}
 	
 	private point_c[] vertex = new point_c[8];
@@ -26,15 +22,10 @@ public class Box {
 	private int vertex_count;
 	private int line_count;
 	
-	private double rotate_factorX;
 	public double rotate_factorY;
 	private double rotate_factorZ;
-	private double rotate_factorX2;
-	private double rotate_factorY2;
 	private double rotate_factorZ2;
-	private double rotate_factorX3;
 	private double rotate_factorY3;
-	private double rotate_factorZ3;
 	
 	private double camera_x;
 	private double camera_y;
@@ -60,8 +51,6 @@ public class Box {
 	private int height = 800;
 	
 	public void initialize() {
-		double bx, bz;
-		
 		for (int i = 0; i < vertex.length; i++) {
 			vertex[i] = new point_c();
 		}
@@ -73,15 +62,14 @@ public class Box {
 		vertex_count = 0;
 		line_count = 0;
 		
-		rotate_factorX = 0;
 		rotate_factorY = 0;
 		rotate_factorZ = 0;
 		camera_x = 0;
 		camera_y = 0;
 		
 		Random rnd = new Random();
-		bx = ((int)((rnd.nextDouble() * 30) * 10) / 10) - 15;
-		bz = ((int)((rnd.nextDouble() * 30) * 10) / 10) - 15;
+		double bx = ((int)((rnd.nextDouble() * 30) * 10) / 10) - 15;
+		double bz = ((int)((rnd.nextDouble() * 30) * 10) / 10) - 15;
 		
 		vertex[0].x = bx; vertex[0].y = -1.4; vertex[0].z = bz;
 		vertex[1].x = bx - 1; vertex[1].y = -1.4; vertex[1].z = bz;
@@ -111,15 +99,10 @@ public class Box {
 		vertex_count = 8;
 		line_count = 12;
 		
-		rotate_factorX = 0;
 		rotate_factorY = 0;
 		rotate_factorZ = 0;
-		rotate_factorX2 = 0;
-		rotate_factorY2 = 0;
 		rotate_factorZ2 = -90;
-		rotate_factorX3 = 0;
 		rotate_factorY3 = 0;
-		rotate_factorZ3 = 0;
 		camera_x = 0;
 		camera_y = 0;
 	}
@@ -144,9 +127,6 @@ public class Box {
 	}
 	
 	public void draw(Graphics pct) {
-		int plotx, ploty;
-		int plotx2, ploty2;
-		
 		int pixelx = width / 30;
 		int pixely = height / 30;
 		
@@ -154,10 +134,10 @@ public class Box {
 		int originy = height / 8 * 5;
 		
 		for (int i = 0; i < line_count; i++) {
-			plotx = (int)(originx + (vertex[lines[i].p1].x * (50 / (50 + vertex[lines[i].p1].z))) * pixelx); // * 0.8
-			ploty = (int)(originy - (vertex[lines[i].p1].y * (50 / (50 + vertex[lines[i].p1].z))) * pixely); // * 0.8
-			plotx2 = (int)(originx + (vertex[lines[i].p2].x * (50 / (50 + vertex[lines[i].p2].z))) * pixelx); // * 0.8
-			ploty2 = (int)(originy - (vertex[lines[i].p2].y * (50 / (50 + vertex[lines[i].p2].z))) * pixely); // * 0.8
+			int plotx = (int)(originx + (vertex[lines[i].p1].x * (50 / (50 + vertex[lines[i].p1].z))) * pixelx); // * 0.8
+			int ploty = (int)(originy - (vertex[lines[i].p1].y * (50 / (50 + vertex[lines[i].p1].z))) * pixely); // * 0.8
+			int plotx2 = (int)(originx + (vertex[lines[i].p2].x * (50 / (50 + vertex[lines[i].p2].z))) * pixelx); // * 0.8
+			int ploty2 = (int)(originy - (vertex[lines[i].p2].y * (50 / (50 + vertex[lines[i].p2].z))) * pixely); // * 0.8
 			
 			pct.drawLine(plotx, ploty, plotx2, ploty2); //, RGB(Int(Rnd * 255), Int(Rnd * 255), Int(Rnd * 255)) ', RGB(lines[i].r, lines[i].g, lines[i].b)
 		}
@@ -172,19 +152,17 @@ public class Box {
 	}
 	
 	public void rotate_with_arm1(Graphics pct, double theta) {
-		double tempx, tempy, tempz;
-		
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x;
-			tempz = vertex[i].z;
+			double tempx = vertex[i].x;
+			double tempz = vertex[i].z;
 			
 			vertex[i].z = tempz * Math.cos(radians(theta)) - tempx * Math.sin(radians(theta));
 			vertex[i].x = tempz * Math.sin(radians(theta)) + tempx * Math.cos(radians(theta));
 		}
 		
 		for (int i = 0; i < joint.length; i++) {
-			tempx = joint[i].x;
-			tempz = joint[i].z;
+			double tempx = joint[i].x;
+			double tempz = joint[i].z;
 			
 			joint[i].z = tempz * Math.cos(radians(theta)) - tempx * Math.sin(radians(theta));
 			joint[i].x = tempz * Math.sin(radians(theta)) + tempx * Math.cos(radians(theta));
@@ -192,19 +170,17 @@ public class Box {
 	}
 	
 	public void rotate_with_arm2(Graphics pct, double theta) {
-		double tempx, tempy, tempz;
-		
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x - joint[0].x;
-			tempy = vertex[i].y - joint[0].y;
+			double tempx = vertex[i].x - joint[0].x;
+			double tempy = vertex[i].y - joint[0].y;
 			
 			vertex[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[0].x;
 			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[0].y;
 		}
 		
 		for (int i = 1; i < joint.length; i++) {
-			tempx = joint[i].x - joint[0].x;
-			tempy = joint[i].y - joint[0].y;
+			double tempx = joint[i].x - joint[0].x;
+			double tempy = joint[i].y - joint[0].y;
 			
 			joint[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[0].x;
 			joint[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[0].y;
@@ -214,18 +190,16 @@ public class Box {
 	}
 	
 	public void rotate_with_arm3(Graphics pct, double theta) {
-		double tempx, tempy, tempz;
-		
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x - joint[1].x;
-			tempy = vertex[i].y - joint[1].y;
+			double tempx = vertex[i].x - joint[1].x;
+			double tempy = vertex[i].y - joint[1].y;
 			
 			vertex[i].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[1].x;
 			vertex[i].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[1].y;
 		}
 		
-		tempx = joint[2].x - joint[1].x;
-		tempy = joint[2].y - joint[1].y;
+		double tempx = joint[2].x - joint[1].x;
+		double tempy = joint[2].y - joint[1].y;
 		
 		joint[2].x = tempx * Math.cos(radians(theta)) - tempy * Math.sin(radians(theta)) + joint[1].x;
 		joint[2].y = tempx * Math.sin(radians(theta)) + tempy * Math.cos(radians(theta)) + joint[1].y;
@@ -234,11 +208,9 @@ public class Box {
 	}
 	
 	public void rotate_with_claw(Graphics pct, double theta) {
-		double tempx, tempy, tempz;
-		
 		for (int i = 0; i < vertex_count; i++) {
-			tempy = vertex[i].y - joint[2].y;
-			tempz = vertex[i].z - joint[2].z;
+			double tempy = vertex[i].y - joint[2].y;
+			double tempz = vertex[i].z - joint[2].z;
 			
 			vertex[i].y = tempy * Math.cos(radians(theta)) - tempz * Math.sin(radians(theta)) + joint[2].y;
 			vertex[i].z = tempy * Math.sin(radians(theta)) + tempz * Math.cos(radians(theta)) + joint[2].z;
@@ -248,19 +220,17 @@ public class Box {
 	}
 	
 	public void translate_x(Graphics pct, int x_change) {
-		double tempx, tempy, tempz;
-		
 		// undo camera rotation
 		for (int i = 0; i < vertex_count; i++) {
-			tempy = vertex[i].y;
-			tempz = vertex[i].z;
+			double tempy = vertex[i].y;
+			double tempz = vertex[i].z;
 			
 			vertex[i].y = tempy * Math.cos(radians(-camera_x)) - tempz * Math.sin(radians(-camera_x));
 			vertex[i].z = tempy * Math.sin(radians(-camera_x)) + tempz * Math.cos(radians(-camera_x));
 		}
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x;
-			tempz = vertex[i].z;
+			double tempx = vertex[i].x;
+			double tempz = vertex[i].z;
 			
 			vertex[i].z = tempz * Math.cos(radians(-camera_y)) - tempx * Math.sin(radians(-camera_y));
 			vertex[i].x = tempz * Math.sin(radians(-camera_y)) + tempx * Math.cos(radians(-camera_y));
@@ -276,15 +246,15 @@ public class Box {
 		
 		// redo camera rotation
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x;
-			tempz = vertex[i].z;
+			double tempx = vertex[i].x;
+			double tempz = vertex[i].z;
 			
 			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
 			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
 		}
 		for (int i = 0; i < vertex_count; i++) {
-			tempy = vertex[i].y;
-			tempz = vertex[i].z;
+			double tempy = vertex[i].y;
+			double tempz = vertex[i].z;
 			
 			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
 			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
@@ -294,19 +264,17 @@ public class Box {
 	}
 	
 	public void translate_z(Graphics pct, int z_change) {
-		double tempx, tempy, tempz;
-		
 		// undo camera rotation
 		for (int i = 0; i < vertex_count; i++) {
-			tempy = vertex[i].y;
-			tempz = vertex[i].z;
+			double tempy = vertex[i].y;
+			double tempz = vertex[i].z;
 			
 			vertex[i].y = tempy * Math.cos(radians(-camera_x)) - tempz * Math.sin(radians(-camera_x));
 			vertex[i].z = tempy * Math.sin(radians(-camera_x)) + tempz * Math.cos(radians(-camera_x));
 		}
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x;
-			tempz = vertex[i].z;
+			double tempx = vertex[i].x;
+			double tempz = vertex[i].z;
 			
 			vertex[i].z = tempz * Math.cos(radians(-camera_y)) - tempx * Math.sin(radians(-camera_y));
 			vertex[i].x = tempz * Math.sin(radians(-camera_y)) + tempx * Math.cos(radians(-camera_y));
@@ -322,15 +290,15 @@ public class Box {
 		
 		// redo camera rotation
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x;
-			tempz = vertex[i].z;
+			double tempx = vertex[i].x;
+			double tempz = vertex[i].z;
 			
 			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
 			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
 		}
 		for (int i = 0; i < vertex_count; i++) {
-			tempy = vertex[i].y;
-			tempz = vertex[i].z;
+			double tempy = vertex[i].y;
+			double tempz = vertex[i].z;
 			
 			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
 			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
@@ -340,17 +308,17 @@ public class Box {
 	}
 	
 	public void drop() {
-		double tempx, tempy, tempz;
-		
 		// undo camera rotation
 		for (int i = 0; i < vertex_count; i++) {
-			tempy = vertex[i].y; tempz = vertex[i].z;
+			double tempy = vertex[i].y;
+			double tempz = vertex[i].z;
 			
 			vertex[i].y = tempy * Math.cos(radians(-camera_x)) - tempz * Math.sin(radians(-camera_x));
 			vertex[i].z = tempy * Math.sin(radians(-camera_x)) + tempz * Math.cos(radians(-camera_x));
 		}
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x; tempz = vertex[i].z;
+			double tempx = vertex[i].x;
+			double tempz = vertex[i].z;
 			
 			vertex[i].z = tempz * Math.cos(radians(-camera_y)) - tempx * Math.sin(radians(-camera_y));
 			vertex[i].x = tempz * Math.sin(radians(-camera_y)) + tempx * Math.cos(radians(-camera_y));
@@ -374,13 +342,15 @@ public class Box {
 		
 		// redo camera rotation
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x; tempz = vertex[i].z;
+			double tempx = vertex[i].x;
+			double tempz = vertex[i].z;
 			
 			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
 			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
 		}
 		for (int i = 0; i < vertex_count; i++) {
-			tempy = vertex[i].y; tempz = vertex[i].z;
+			double tempy = vertex[i].y;
+			double tempz = vertex[i].z;
 			
 			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
 			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
@@ -388,8 +358,6 @@ public class Box {
 	}
 	
 	public void camera_rotate(Graphics pct, int x_theta, int y_theta) {
-		double tempx, tempy, tempz;
-		
 		//__________________________________
 		//*******Rotate about x-axis********
 		//----------------------------------
@@ -397,8 +365,8 @@ public class Box {
 		// x-rotation
 		if (x_theta != 0) {
 			for (int i = 0; i < vertex_count; i++) {
-				tempy = vertex[i].y;
-				tempz = vertex[i].z;
+				double tempy = vertex[i].y;
+				double tempz = vertex[i].z;
 				
 				vertex[i].y = tempy * Math.cos(radians(x_theta - camera_x)) - tempz * Math.sin(radians(x_theta - camera_x));
 				vertex[i].z = tempy * Math.sin(radians(x_theta - camera_x)) + tempz * Math.cos(radians(x_theta - camera_x));
@@ -419,8 +387,8 @@ public class Box {
 		if (y_theta != 0) {
 			// undo x-rotation
 			for (int i = 0; i < vertex_count; i++) {
-				tempy = vertex[i].y;
-				tempz = vertex[i].z;
+				double tempy = vertex[i].y;
+				double tempz = vertex[i].z;
 				
 				vertex[i].y = tempy * Math.cos(radians(-camera_x)) - tempz * Math.sin(radians(-camera_x));
 				vertex[i].z = tempy * Math.sin(radians(-camera_x)) + tempz * Math.cos(radians(-camera_x));
@@ -428,8 +396,8 @@ public class Box {
 			
 			// y-rotation
 			for (int i = 0; i < vertex_count; i++) {
-				tempx = vertex[i].x;
-				tempz = vertex[i].z;
+				double tempx = vertex[i].x;
+				double tempz = vertex[i].z;
 				
 				vertex[i].z = tempz * Math.cos(radians(y_theta - camera_y)) - tempx * Math.sin(radians(y_theta - camera_y));
 				vertex[i].x = tempz * Math.sin(radians(y_theta - camera_y)) + tempx * Math.cos(radians(y_theta - camera_y));
@@ -437,8 +405,8 @@ public class Box {
 			
 			// redo x-rotation
 			for (int i = 0; i < vertex_count; i++) {
-				tempy = vertex[i].y;
-				tempz = vertex[i].z;
+				double tempy = vertex[i].y;
+				double tempz = vertex[i].z;
 				
 				vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
 				vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));
@@ -457,17 +425,6 @@ public class Box {
 	}
 	
 	public void super_rotate(Graphics pct, int arm_num, double ry, double rz, double rz2, double ry3, double openclaw) {
-		double tempx, tempy, tempz;
-		double temprotatex;
-		double temprotatey;
-		double temprotatez;
-		double temprotatex2;
-		double temprotatey2;
-		double temprotatez2;
-		double temprotatex3;
-		double temprotatey3;
-		double temprotatez3;
-		
 		if (arm_num == 1) rotate_factorY = rotate_factorY + ry;
 		if (arm_num == 2) rotate_factorZ = rotate_factorZ + rz;
 		if (arm_num == 3) rotate_factorZ2 = rotate_factorZ2 + rz2;
@@ -490,15 +447,15 @@ public class Box {
 		
 		// redo camera rotation
 		for (int i = 0; i < vertex_count; i++) {
-			tempx = vertex[i].x;
-			tempz = vertex[i].z;
+			double tempx = vertex[i].x;
+			double tempz = vertex[i].z;
 			
 			vertex[i].z = tempz * Math.cos(radians(camera_y)) - tempx * Math.sin(radians(camera_y));
 			vertex[i].x = tempz * Math.sin(radians(camera_y)) + tempx * Math.cos(radians(camera_y));
 		}
 		for (int i = 0; i < vertex_count; i++) {
-			tempy = vertex[i].y;
-			tempz = vertex[i].z;
+			double tempy = vertex[i].y;
+			double tempz = vertex[i].z;
 			
 			vertex[i].y = tempy * Math.cos(radians(camera_x)) - tempz * Math.sin(radians(camera_x));
 			vertex[i].z = tempy * Math.sin(radians(camera_x)) + tempz * Math.cos(radians(camera_x));

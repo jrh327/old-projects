@@ -38,74 +38,74 @@ import javax.swing.border.BevelBorder;
 
 public class Form extends JFrame {
 	private static final long serialVersionUID = -6031794944802349379L;
-	JTextField txtNumberBoxes; // Right Justify, Text = "5"
-	JScrollBar hscrRotateX; // Max = 75, SmallChange = 5, LargeChange = 20
-	JTextField txtRotateX; // Right Justify, Text = "0"
-	JScrollBar hscrRotateY; // Max = 360, SmallChange = 5, LargeChange = 20
-	JTextField txtRotateY; // Right Justify, Text = "0"
-	JScrollBar hscrXTranslate; // Min = -15, Max = 15
-	JScrollBar hscrZTranslate; // Min = -20, Max = 20
-	JTextField txtXTranslate; // Right Justify, Text = "0"
-	JTextField txtZTranslate; // Right Justify, Text = "0"
-	JButton cmdOpenRoute; // Caption = "Open"
-	JButton cmdSaveRoute; // Caption = "Save", Enabled = False
-	JButton cmdAutoRobot; // Caption = "AutoGo"
-	JButton cmdClearCurrentRoute; // Caption = "Clear Route"
-	JButton cmdNewRoute; // Caption = "New Route"
-	JCheckBox chkMoves; // Caption = "Teach Route"
-	JButton cmdResetRobot; // Caption = "Reset"
-	Timer tmrResetRobot; // Enabled = False, Interval = 50
-	Timer tmrAutoRobot; // Enabled = False, Interval = 100
-	JTextField txtOpenClaw; // Right Justify, Text = "0"
-	JTextField txtClawRotate; // Right Justify, Text = "90"
-	JTextField txtArm3; // Right Justify, Text = "0"
-	JTextField txtArm2; // Right Justify, Text = "0"
-	JScrollBar hscrClawOpen; // Max = 6
-	JScrollBar hscrClawRotate; // Max = 180, SmallChange = 5, LargeChange = 5
-	JScrollBar hscrArm3; // Min = -20, Max = 200, SmallChange = 5, LargeChange = 5
-	JScrollBar hscrArm2; // Max = 180, SmallChange = 5, LargeChange = 5
-	JScrollBar hscrArm1; // Min = -360, Max = 360, SmallChange = 5, LargeChange = 5
-	JTextField txtArm1; // Right Justify, Text = "0"
-	JButton cmdDrawRobot; // Caption = "Drawz :D"
-	JPanel renderArea;
-	Image buffer;
-	Graphics pctRobot;
-	JLabel Label1; // Right Justify, BorderStyle = Fixed Single
-	JLabel Label24; // Right Justify, Caption = "box middle"
-	JLabel Label23; // Caption = "claw middle"
-	JLabel Label19; // Center, Caption = "Number of boxes"
-	JLabel Label22; // Center, Caption = "Camera Rotation"
-	JLabel Label21; // Right Justify, Caption = "X"
-	JLabel Label20; // Right Justify, Caption = "Y"
-	JLabel Label18; // Right Justify, BorderStyle = Fixed Single
-	JLabel Label17; // Right Justify, BorderStyle = Fixed Single
-	JLabel Label15; // Center, Caption = "X-Translate"
-	JLabel Label14; // Center, Caption = "Z-Translate"
-	JLabel lblRouteName; // Center, BorderStyle = Fixed Single
-	JLabel Label13; // Center, Caption = "Route Name:"
-	JLabel Label12; // Center, Caption = "Open/Close"
-	JLabel Label11; // Center, Caption = "Rotate"
-	JLabel Label10; // Center, Caption = "Claw"
-	JLabel Label9; // Center, Caption = "Arm3"
-	JLabel Label8; // Center, Caption = "Arm2"
-	JLabel Label7; // Center, Caption = "Arm1"
-	JLabel Label6; // Caption = "z"
-	JLabel Label5; // Caption = "y"
-	JLabel Label4; // Caption = "x"
-	JLabel Label3; // Right Justify, BorderStyle = Fixed Single
-	JLabel Label2; // Right Justify, BorderStyle = Fixed Single
-	JLabel Label16; // Right Justify, BorderStyle = Fixed Single
+	private JTextField txtNumberBoxes;
+	private JScrollBar hscrRotateX;
+	private JTextField txtRotateX;
+	private JScrollBar hscrRotateY;
+	private JTextField txtRotateY;
+	private JScrollBar hscrXTranslate;
+	private JScrollBar hscrZTranslate;
+	private JTextField txtXTranslate;
+	private JTextField txtZTranslate;
+	private JButton cmdOpenRoute;
+	private JButton cmdSaveRoute;
+	private JButton cmdAutoRobot;
+	private JButton cmdClearCurrentRoute;
+	private JButton cmdNewRoute;
+	private JCheckBox chkMoves;
+	private JButton cmdResetRobot;
+	private Timer tmrResetRobot;
+	private Timer tmrAutoRobot;
+	private JTextField txtOpenClaw;
+	private JTextField txtClawRotate;
+	private JTextField txtArm3;
+	private JTextField txtArm2;
+	private JScrollBar hscrClawOpen;
+	private JScrollBar hscrClawRotate;
+	private JScrollBar hscrArm3;
+	private JScrollBar hscrArm2;
+	private JScrollBar hscrArm1;
+	private JTextField txtArm1;
+	private JButton cmdDrawRobot;
+	private JPanel renderArea;
+	private Image buffer;
+	private Graphics pctRobot;
+	private JLabel Label1;
+	private JLabel Label24;
+	private JLabel Label23;
+	private JLabel Label19;
+	private JLabel Label22;
+	private JLabel Label21;
+	private JLabel Label20;
+	private JLabel Label18;
+	private JLabel Label17;
+	private JLabel Label15;
+	private JLabel Label14;
+	private JLabel lblRouteName;
+	private JLabel Label13;
+	private JLabel Label12;
+	private JLabel Label11;
+	private JLabel Label10;
+	private JLabel Label9;
+	private JLabel Label8;
+	private JLabel Label7;
+	private JLabel Label6;
+	private JLabel Label5;
+	private JLabel Label4;
+	private JLabel Label3;
+	private JLabel Label2;
+	private JLabel Label16;
 	
 	private final int RENDER_WIDTH = 800;
 	private final int RENDER_HEIGHT = 800;
 	
-	Robot r;
-	Box[] b = new Box[10];
+	private Robot r;
+	private Box[] b = new Box[10];
 	
 	/**
 	 * Array of strings for each of the 1000 allowed moves in a route
 	 */
-	String[] moves = new String[1000];
+	private String[] moves = new String[1000];
 	
 //	    1 - Arm1 right
 //	    2 - Arm1 left
@@ -125,67 +125,67 @@ public class Form extends JFrame {
 	/**
 	 * number of moves of the current route of the robot
 	 */
-	int number_moves;
+	private int number_moves;
 	
 	/**
 	 * number of boxes on the screen
 	 */
-	int number_boxes;
+	private int number_boxes;
 	
 	/**
 	 * starting variable for the timer that moves the robot through a route
 	 */
-	int s;
+	private int s;
 	
 	/**
 	 * ending variables for the timer that moves the robot through a route
 	 */
-	int e;
+	private int e;
 	
 	/**
 	 * x-coordinate of the mouse on the screen
 	 */
-	int mousex;
+	private int mousex;
 	
 	/**
 	 * y-coordinate of the mouse on the screen
 	 */
-	int mousey;
+	private int mousey;
 	
 	/**
 	 * x-coordinate of the middle of the robot's claw
 	 */
-	double middle_claw_x;
+	private double middle_claw_x;
 	
 	/**
 	 * y-coordinate of the middle of the robot's claw
 	 */
-	double middle_claw_y;
+	private double middle_claw_y;
 	
 	/**
 	 * z-coordinate of the middle of the robot's claw
 	 */
-	double middle_claw_z;
+	private double middle_claw_z;
 	
 	/**
 	 * x-coordinate of the middle of a box, array of 10, one for each of the 10 possible boxes on the screen
 	 */
-	double[] middle_box_x = new double[10];
+	private double[] middle_box_x = new double[10];
 	
 	/**
 	 * y-coordinate of the middle of a box, array of 10, one for each of the 10 possible boxes on the screen
 	 */
-	double[] middle_box_y = new double[10];
+	private double[] middle_box_y = new double[10];
 	
 	/**
 	 * z-coordinate of the middle of a box, array of 10, one for each of the 10 possible boxes on the screen
 	 */
-	double[] middle_box_z = new double[10];
+	private double[] middle_box_z = new double[10];
 	
 	/**
 	 * boolean to tell the robot if it is holding a box, array of 10, one for each of the 10 possible boxes on the screen
 	 */
-	boolean[] holding = new boolean[10];
+	private boolean[] holding = new boolean[10];
 	
 	public static void main(String[] args) {
 		new Form().init();
