@@ -1348,52 +1348,116 @@ public class Form extends JFrame {
 	
 	private void tmrResetRobot_Timer() {
 		if (hscrArm1.getValue() > 0 && hscrArm1.getValue() <= 180) {
-			hscrArm1.setValue(hscrArm1.getValue() - 5);
+			int newVal = hscrArm1.getValue() - hscrArm1.getBlockIncrement();
+			if (newVal < 0) {
+				newVal = 0;
+			}
+			hscrArm1.setValue(newVal);
 		}
 		if (hscrArm1.getValue() > 0 && hscrArm1.getValue() > 180) {
-			hscrArm1.setValue(hscrArm1.getValue() + 5);
+			int newVal = hscrArm1.getValue() + hscrArm1.getBlockIncrement();
+			if (newVal > 0) {
+				newVal = 0;
+			}
+			hscrArm1.setValue(newVal);
 		}
 		if (hscrArm1.getValue() < 0 && hscrArm1.getValue() >= -180) {
-			hscrArm1.setValue(hscrArm1.getValue() + 5);
+			int newVal = hscrArm1.getValue() + hscrArm1.getBlockIncrement();
+			if (newVal > 0) {
+				newVal = 0;
+			}
+			hscrArm1.setValue(newVal);
 		}
 		if (hscrArm1.getValue() < 0 && hscrArm1.getValue() < -180) {
-			hscrArm1.setValue(hscrArm1.getValue() - 5);
+			int newVal = hscrArm1.getValue() - hscrArm1.getBlockIncrement();
+			if (newVal < 0) {
+				newVal = 0;
+			}
+			hscrArm1.setValue(newVal);
 		}
 		if (hscrArm2.getValue() > 0) {
-			hscrArm2.setValue(hscrArm2.getValue() - 5);
+			int newVal = hscrArm2.getValue() - hscrArm2.getBlockIncrement();
+			if (newVal < 0) {
+				newVal = 0;
+			}
+			hscrArm2.setValue(newVal);
 		}
 		if (hscrArm2.getValue() < 0) {
-			hscrArm2.setValue(hscrArm2.getValue() + 5);
+			int newVal = hscrArm2.getValue() + hscrArm2.getBlockIncrement();
+			if (newVal > 0) {
+				newVal = 0;
+			}
+			hscrArm2.setValue(newVal);
 		}
 		if (hscrArm3.getValue() > 0) {
-			hscrArm3.setValue(hscrArm3.getValue() - 5);
+			int newVal = hscrArm3.getValue() - hscrArm3.getBlockIncrement();
+			if (newVal < 0) {
+				newVal = 0;
+			}
+			hscrArm3.setValue(newVal);
 		}
 		if (hscrArm3.getValue() < 0) {
-			hscrArm3.setValue(hscrArm3.getValue() + 5);
+			int newVal = hscrArm3.getValue() + hscrArm3.getBlockIncrement();
+			if (newVal > 0) {
+				newVal = 0;
+			}
+			hscrArm3.setValue(newVal);
 		}
 		if (hscrClawOpen.getValue() > 0) {
-			hscrClawOpen.setValue(hscrClawOpen.getValue() - 1);
+			int newVal = hscrClawOpen.getValue() - hscrClawOpen.getBlockIncrement();
+			if (newVal < 0) {
+				newVal = 0;
+			}
+			hscrClawOpen.setValue(newVal);
 		}
 		if (hscrClawOpen.getValue() < 0) {
-			hscrClawOpen.setValue(hscrClawOpen.getValue() + 1);
+			int newVal = hscrClawOpen.getValue() + hscrClawOpen.getBlockIncrement();
+			if (newVal > 0) {
+				newVal = 0;
+			}
+			hscrClawOpen.setValue(newVal);
 		}
 		if (hscrClawRotate.getValue() > 90) {
-			hscrClawRotate.setValue(hscrClawRotate.getValue() - 5);
+			int newVal = hscrClawRotate.getValue() - hscrClawRotate.getBlockIncrement();
+			if (newVal < 0) {
+				newVal = 0;
+			}
+			hscrClawRotate.setValue(newVal);
 		}
 		if (hscrClawRotate.getValue() < 90) {
-			hscrClawRotate.setValue(hscrClawRotate.getValue() + 5);
+			int newVal = hscrClawRotate.getValue() + hscrClawRotate.getBlockIncrement();
+			if (newVal > 0) {
+				newVal = 0;
+			}
+			hscrClawRotate.setValue(newVal);
 		}
 		if (hscrXTranslate.getValue() > 0) {
-			hscrXTranslate.setValue(hscrXTranslate.getValue() - 1);
+			int newVal = hscrXTranslate.getValue() - hscrXTranslate.getBlockIncrement();
+			if (newVal < 0) {
+				newVal = 0;
+			}
+			hscrXTranslate.setValue(newVal);
 		}
 		if (hscrXTranslate.getValue() < 0) {
-			hscrXTranslate.setValue(hscrXTranslate.getValue() + 1);
+			int newVal = hscrXTranslate.getValue() + hscrXTranslate.getBlockIncrement();
+			if (newVal > 0) {
+				newVal = 0;
+			}
+			hscrXTranslate.setValue(newVal);
 		}
 		if (hscrZTranslate.getValue() > 0) {
-			hscrZTranslate.setValue(hscrZTranslate.getValue() - 1);
+			int newVal = hscrZTranslate.getValue() - hscrZTranslate.getBlockIncrement();
+			if (newVal < 0) {
+				newVal = 0;
+			}
+			hscrZTranslate.setValue(newVal);
 		}
 		if (hscrZTranslate.getValue() < 0) {
-			hscrZTranslate.setValue(hscrZTranslate.getValue() + 1);
+			int newVal = hscrZTranslate.getValue() + hscrZTranslate.getBlockIncrement();
+			if (newVal > 0) {
+				newVal = 0;
+			}
+			hscrZTranslate.setValue(newVal);
 		}
 		
 		if (hscrArm1.getValue() == 0
