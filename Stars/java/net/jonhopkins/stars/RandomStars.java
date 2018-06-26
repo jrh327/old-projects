@@ -74,7 +74,7 @@ public class RandomStars extends JFrame implements Runnable {
 			blue = rand.nextInt(256);
 			
 			synchronized (buffer) {
-				graphics.setColor(new Color(red, blue, green));
+				graphics.setColor(new Color(red, green, blue));
 				graphics.drawLine(originx + (xpos * pixelx), originy, originx, originy - (ypos * pixely));
 			}
 			
