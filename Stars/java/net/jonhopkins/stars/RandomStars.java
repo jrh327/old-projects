@@ -12,8 +12,14 @@ public class RandomStars extends JFrame implements Runnable {
 	private static final long serialVersionUID = -640481485929655288L;
 	private final int WIDTH = 500;
 	private final int HEIGHT = 500;
+	private final int PIXELS_PER_X_UNIT = WIDTH / 40;
+	private final int PIXELS_PER_Y_UNIT = HEIGHT / 40;
+	private final int ORIGIN_X = WIDTH / 2;
+	private final int ORIGIN_Y = HEIGHT / 2;
+	
 	private Image buffer;
 	private Graphics graphics;
+	private Random rand;
 	
 	public static void main(String[] args) {
 		new RandomStars().init();
@@ -51,69 +57,42 @@ public class RandomStars extends JFrame implements Runnable {
 	
 	@Override
 	public void run() {
-		boolean quad1 = true;
-		boolean quad2 = false;
-		boolean quad3 = false;
-		boolean quad4 = false;
-		int xpos = 21;
-		int ypos = 0;
-		int red = 0;
-		int green = 0;
-		int blue = 0;
-		
-		int pixelx = WIDTH / 40;
-		int pixely = HEIGHT / 40;
-		int originx = WIDTH / 2;
-		int originy = HEIGHT / 2;
-		
-		Random rand = new Random();
+		rand = new Random();
 		
 		while (true) {
-			red = rand.nextInt(256);
-			green = rand.nextInt(256);
-			blue = rand.nextInt(256);
-			
-			synchronized (buffer) {
-				graphics.setColor(new Color(red, green, blue));
-				graphics.drawLine(originx + (xpos * pixelx), originy, originx, originy - (ypos * pixely));
+			for (int xpos = 21; xpos > -1; xpos--) {
+				int ypos = Math.abs(xpos - 21);
+				drawLine(graphics, xpos, ypos);
 			}
-			
-			if (quad1) {
-				xpos = xpos - 1;
-				ypos = Math.abs(xpos - 21);
-				if (xpos == -1) {
-					xpos = 0;
-					quad1 = false;
-					quad2 = true;
-				}
+			for (int xpos = 0; xpos > -22; xpos--) {
+				int ypos = Math.abs(xpos + 21);
+				drawLine(graphics, xpos, ypos);
 			}
-			if (quad2) {
-				xpos = xpos - 1;
-				ypos = Math.abs(xpos + 21);
-				if (xpos == -22) {
-					quad2 = false;
-					quad3 = true;
-				}
+			for (int xpos = -21; xpos < 1; xpos++) {
+				int ypos = -Math.abs(xpos + 21);
+				drawLine(graphics, xpos, ypos);
 			}
-			if (quad3) {
-				xpos = xpos + 1;
-				ypos = -Math.abs(xpos + 21);
-				if (xpos == 1) {
-					xpos = 0;
-					quad3 = false;
-					quad4 = true;
-				}
+			for (int xpos = 0; xpos < 22; xpos++) {
+				int ypos = -Math.abs(xpos - 21);
+				drawLine(graphics, xpos, ypos);
 			}
-			if (quad4) {
-				xpos = xpos + 1;
-				ypos = -Math.abs(xpos - 21);
-				if (xpos == 21) {
-					ypos = 0;
-					quad4 = false;
-					quad1 = true;
-					repaint();
-				}
-			}
+			repaint();
+		}
+	}
+	
+	private void drawLine(Graphics graphics, int xpos, int ypos) {
+		int red = rand.nextInt(256);
+		int green = rand.nextInt(256);
+		int blue = rand.nextInt(256);
+		
+		int x1 = ORIGIN_X + (xpos * PIXELS_PER_X_UNIT);
+		int y1 = ORIGIN_Y;
+		int x2 = ORIGIN_X;
+		int y2 = ORIGIN_Y - (ypos * PIXELS_PER_Y_UNIT);
+		
+		synchronized (buffer) {
+			graphics.setColor(new Color(red, green, blue));
+			graphics.drawLine(x1, y1, x2, y2);
 		}
 	}
 }
