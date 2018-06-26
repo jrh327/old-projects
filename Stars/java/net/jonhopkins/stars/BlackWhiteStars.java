@@ -7,7 +7,7 @@ import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-public class Stars extends JFrame implements Runnable {
+public class BlackWhiteStars extends JFrame implements Runnable {
 	private static final long serialVersionUID = -640481485929655288L;
 	private final int WIDTH = 500;
 	private final int HEIGHT = 500;
@@ -15,11 +15,11 @@ public class Stars extends JFrame implements Runnable {
 	private Graphics graphics;
 	
 	public static void main(String[] args) {
-		new Stars().init();
+		new BlackWhiteStars().init();
 	}
 	
 	public void init() {
-		final Stars stars = this;
+		final BlackWhiteStars stars = this;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				setUpWindow();
@@ -71,9 +71,7 @@ public class Stars extends JFrame implements Runnable {
 				red = red + 255 / 80;
 				green = green + 255 / 80;
 				blue = blue + 255 / 80;
-			}
-			//If clearing = -1 Then red = Int(Rnd * 255): green = Int(Rnd * 255): blue = Int(Rnd * 255):
-			if (clearing == 1) {
+			} else if (clearing == 1) {
 				red = 0;
 				blue = 0;
 				green = 0;
