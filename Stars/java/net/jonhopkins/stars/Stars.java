@@ -48,7 +48,8 @@ public class Stars extends JFrame implements Runnable {
 		setVisible(true);
 	}
 	
-	private void Form_Activate() {
+	@Override
+	public void run() {
 		boolean quad1 = true;
 		boolean quad2 = false;
 		boolean quad3 = false;
@@ -127,10 +128,5 @@ public class Stars extends JFrame implements Runnable {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	@Override
-	public void run() {
-		Form_Activate();
 	}
 }
