@@ -11,6 +11,11 @@ public class BlackWhiteStars extends JFrame implements Runnable {
 	private static final long serialVersionUID = -640481485929655288L;
 	private final int WIDTH = 500;
 	private final int HEIGHT = 500;
+	private final int PIXELS_PER_X_UNIT = WIDTH / 40;
+	private final int PIXELS_PER_Y_UNIT = HEIGHT / 40;
+	private final int ORIGIN_X = WIDTH / 2;
+	private final int ORIGIN_Y = HEIGHT / 2;
+	
 	private Image buffer;
 	private Graphics graphics;
 	
@@ -61,11 +66,6 @@ public class BlackWhiteStars extends JFrame implements Runnable {
 		int green = 0;
 		int blue = 0;
 		
-		int pixelx = WIDTH / 40;
-		int pixely = HEIGHT / 40;
-		int originx = WIDTH / 2;
-		int originy = HEIGHT / 2;
-		
 		while (true) {
 			if (!clearing) {
 				red = red + 255 / 80;
@@ -79,7 +79,7 @@ public class BlackWhiteStars extends JFrame implements Runnable {
 			
 			synchronized (buffer) {
 				graphics.setColor(new Color(red, green, blue));
-				graphics.drawLine(originx + (xpos * pixelx), originy, originx, originy - (ypos * pixely));
+				drawLine(graphics, xpos, ypos);
 				repaint();
 			}
 			
@@ -125,6 +125,17 @@ public class BlackWhiteStars extends JFrame implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	private void drawLine(Graphics graphics, int xpos, int ypos) {
+		int x1 = ORIGIN_X + (xpos * PIXELS_PER_X_UNIT);
+		int y1 = ORIGIN_Y;
+		int x2 = ORIGIN_X;
+		int y2 = ORIGIN_Y - (ypos * PIXELS_PER_Y_UNIT);
+		
+		synchronized (buffer) {
+			graphics.drawLine(x1, y1, x2, y2);
 		}
 	}
 }
