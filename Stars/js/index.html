@@ -37,10 +37,11 @@
 			source = '/rgb.js';
 		}
 
+		var host = document.location.host;
 		var path = document.location.pathname;
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
-		script.src = '//' + path.substr(0, path.lastIndexOf('/')) + source;
+		script.src = '//' + host + path.substr(0, path.lastIndexOf('/')) + source;
 		document.getElementsByTagName('head')[0].appendChild(script);
 	});
 	</script>
