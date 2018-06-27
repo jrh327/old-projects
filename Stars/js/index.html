@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Stars</title>
+	<style type="text/css">
+	body {
+		background-color: black;
+	}
+	canvas {
+		padding: 0;
+		margin: auto;
+		display: block;
+	}
+	</style>
+	<script type="text/javascript">
+	window.addEventListener('load', function() {
+		function findGetParameter(parameterName) {
+			var result = null,
+			tmp = [];
+			var items = location.search.substr(1).split('&');
+			for (var index = 0; index < items.length; index++) {
+				tmp = items[index].split('=');
+				if (tmp[0] === parameterName) {
+					result = decodeURIComponent(tmp[1]);
+				}
+			}
+			return result;
+		}
+
+		var which = findGetParameter('stars');
+		var source = '/black-white.js';
+		if (which == 'black-white') {
+			source = '/black-white.js';
+		} else if (which == 'random') {
+			source = '/random.js';
+		} else if (which == 'rgb') {
+			source = '/rgb.js';
+		}
+
+		var path = document.location.pathname;
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = '//' + path.substr(0, path.lastIndexOf('/')) + source;
+		document.getElementsByTagName('head')[0].appendChild(script);
+	});
+	</script>
+</head>
+<body>
+	<canvas id="canvas">
+		Sorry, your browser does not support canvas.
+	</canvas>
+</body>
+</html>
