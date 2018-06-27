@@ -78,7 +78,7 @@ public class BlackWhiteStars extends JFrame implements Runnable {
 			}
 			
 			synchronized (buffer) {
-				graphics.setColor(new Color(red, blue, green));
+				graphics.setColor(new Color(red, green, blue));
 				graphics.drawLine(originx + (xpos * pixelx), originy, originx, originy - (ypos * pixely));
 				repaint();
 			}
