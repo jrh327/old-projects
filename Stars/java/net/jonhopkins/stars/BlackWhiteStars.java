@@ -54,7 +54,7 @@ public class BlackWhiteStars extends JFrame implements Runnable {
 		boolean quad2 = false;
 		boolean quad3 = false;
 		boolean quad4 = false;
-		int clearing = -1;
+		boolean clearing = false;
 		int xpos = 21;
 		int ypos = 0;
 		int red = 0;
@@ -67,11 +67,11 @@ public class BlackWhiteStars extends JFrame implements Runnable {
 		int originy = HEIGHT / 2;
 		
 		while (true) {
-			if (clearing == -1) {
+			if (!clearing) {
 				red = red + 255 / 80;
 				green = green + 255 / 80;
 				blue = blue + 255 / 80;
-			} else if (clearing == 1) {
+			} else {
 				red = 0;
 				blue = 0;
 				green = 0;
@@ -116,7 +116,7 @@ public class BlackWhiteStars extends JFrame implements Runnable {
 					ypos = 0;
 					quad4 = false;
 					quad1 = true;
-					clearing = -clearing;
+					clearing = !clearing;
 				}
 			}
 			
