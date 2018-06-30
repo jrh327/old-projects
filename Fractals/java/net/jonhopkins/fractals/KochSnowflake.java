@@ -50,8 +50,8 @@ public class KochSnowflake extends FractalPanel {
 		v[0].Y = 550;
 		v[1].X = 650;
 		v[1].Y = 550;
-		v[2].X = (int)(150 + 500 * Math.cos(3.14159265358979 / 3));
-		v[2].Y = (int)(550 - 500 * Math.sin(3.14159265358979 / 3));
+		v[2].X = (int)(150 + 500 * Math.cos(Math.PI / 3));
+		v[2].Y = (int)(550 - 500 * Math.sin(Math.PI / 3));
 		
 		draw_vertices(v[0], v[1], v[2]);
 		
@@ -68,14 +68,14 @@ public class KochSnowflake extends FractalPanel {
 			
 			int x1 = v[0].X + ((v[2].X - v[0].X) / 3);
 			int y1 = v[0].Y - ((v[0].Y - v[2].Y) / 3);
-			int x2 = (int)(((v[0].X + v[2].X) / 2) + ((250 * Math.sqrt(3) / 2) * Math.cos(150 * (3.14159265358979 / 180))));
-			int y2 = (int)(((v[0].Y + v[2].Y) / 2) - ((250 * Math.sqrt(3) / 2) * Math.sin(150 * (3.14159265358979 / 180))));
+			int x2 = (int)(((v[0].X + v[2].X) / 2) + ((250 * Math.sqrt(3) / 2) * Math.cos(radians(150))));
+			int y2 = (int)(((v[0].Y + v[2].Y) / 2) - ((250 * Math.sqrt(3) / 2) * Math.sin(radians(150))));
 			graphics.drawLine(x1, y1, x2, y2);
 			
 			x1 = (int)(v[0].X + ((v[2].X - v[0].X) * (2.0 / 3.0)));
 			y1 = (int)(v[0].Y - ((v[0].Y - v[2].Y) * (2.0 / 3.0)));
-			x2 = (int)(((v[0].X + v[2].X) / 2) + ((250 * Math.sqrt(3) / 2) * Math.cos(150 * (3.14159265358979 / 180))));
-			y2 = (int)(((v[0].Y + v[2].Y) / 2) - ((250 * Math.sqrt(3) / 2) * Math.sin(150 * (3.14159265358979 / 180))));
+			x2 = (int)(((v[0].X + v[2].X) / 2) + ((250 * Math.sqrt(3) / 2) * Math.cos(radians(150))));
+			y2 = (int)(((v[0].Y + v[2].Y) / 2) - ((250 * Math.sqrt(3) / 2) * Math.sin(radians(150))));
 			graphics.drawLine(x1, y1, x2, y2);
 		}
 	}
@@ -106,8 +106,8 @@ public class KochSnowflake extends FractalPanel {
 			v[0].Y = y;
 			v[1].X = x + 500;
 			v[1].Y = y;
-			v[2].X = (int)(x + 500 * Math.cos(3.14159265358979 / 3));
-			v[2].Y = (int)(y - 500 * Math.sin(3.14159265358979 / 3));
+			v[2].X = (int)(x + 500 * Math.cos(Math.PI / 3));
+			v[2].Y = (int)(y - 500 * Math.sin(Math.PI / 3));
 			
 			draw_vertices(v[0], v[1], v[2]);
 			getRootPane().repaint();

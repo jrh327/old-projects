@@ -79,8 +79,8 @@ public class FractalTree extends FractalPanel {
 	}
 	
 	private void tree(int x1, int y1, float angle, float length, int i) {
-		int X2 = (int)(x1 + (length * Math.cos(angle * (3.14159265358979 / 180))));
-		int Y2 = (int)(y1 - (length * Math.sin(angle * (3.14159265358979 / 180))));
+		int X2 = (int)(x1 + (length * Math.cos(radians(angle))));
+		int Y2 = (int)(y1 - (length * Math.sin(radians(angle))));
 		
 		int r = 0;
 		int g = 0;

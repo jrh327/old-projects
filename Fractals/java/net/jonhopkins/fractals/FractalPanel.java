@@ -17,4 +17,8 @@ public abstract class FractalPanel extends JPanel {
 	}
 	
 	public abstract void mouseClick(int button, int shift, int x, int y);
+	
+	protected double radians(double theta) {
+		return theta * (Math.PI / 180);
+	}
 }

@@ -116,7 +116,7 @@ public class SierpinskiTriangle extends FractalPanel {
 			
 			//vert(1).X = Int(Rnd * (v(3).X - v(2).X)) + v(2).X '(Int(Rnd * 800) + 25)
 			
-			rndvert = (int)(rand.nextFloat() * 3);
+			rndvert = (int)(rand.nextInt(v.length));
 			
 			vert[1] = midpoint(vert[0], v[rndvert]);
 			

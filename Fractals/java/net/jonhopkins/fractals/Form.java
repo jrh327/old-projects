@@ -1,6 +1,7 @@
 package net.jonhopkins.fractals;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -107,6 +108,7 @@ public class Form extends JFrame {
 				frame.remove(currentFractal);
 				currentFractal = new SierpinskiTriangle();
 				currentFractal.setGraphics(pctFractal);
+				pctFractal.setColor(Color.BLACK);
 				pctFractal.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 				
 				btnSierpinski.setEnabled(false);
@@ -125,6 +127,7 @@ public class Form extends JFrame {
 				frame.remove(currentFractal);
 				currentFractal = new FractalTree();
 				currentFractal.setGraphics(pctFractal);
+				pctFractal.setColor(Color.BLACK);
 				pctFractal.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 				
 				btnSierpinski.setEnabled(true);
@@ -143,6 +146,7 @@ public class Form extends JFrame {
 				frame.remove(currentFractal);
 				currentFractal = new KochSnowflake();
 				currentFractal.setGraphics(pctFractal);
+				pctFractal.setColor(Color.BLACK);
 				pctFractal.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 				
 				btnSierpinski.setEnabled(true);
