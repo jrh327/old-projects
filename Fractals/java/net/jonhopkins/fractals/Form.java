@@ -20,6 +20,7 @@ public class Form extends JFrame {
 	private FractalPanel currentFractal;
 	private JButton btnSierpinski;
 	private JButton btnTree;
+	private JButton btnFlower;
 	private JButton btnKoch;
 	private JPanel renderArea;
 	private Image buffer;
@@ -113,6 +114,7 @@ public class Form extends JFrame {
 				
 				btnSierpinski.setEnabled(false);
 				btnTree.setEnabled(true);
+				btnFlower.setEnabled(true);
 				btnKoch.setEnabled(true);
 				
 				frame.add(currentFractal, BorderLayout.EAST);
@@ -132,6 +134,27 @@ public class Form extends JFrame {
 				
 				btnSierpinski.setEnabled(true);
 				btnTree.setEnabled(false);
+				btnFlower.setEnabled(true);
+				btnKoch.setEnabled(true);
+				
+				frame.add(currentFractal, BorderLayout.EAST);
+				frame.getContentPane().validate();
+				frame.getContentPane().repaint();
+			}
+		});
+		btnFlower = new JButton("Flower");
+		btnFlower.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frame.remove(currentFractal);
+				currentFractal = new FractalFlower();
+				currentFractal.setGraphics(pctFractal);
+				pctFractal.setColor(Color.BLACK);
+				pctFractal.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
+				
+				btnSierpinski.setEnabled(true);
+				btnTree.setEnabled(true);
+				btnFlower.setEnabled(false);
 				btnKoch.setEnabled(true);
 				
 				frame.add(currentFractal, BorderLayout.EAST);
@@ -151,6 +174,7 @@ public class Form extends JFrame {
 				
 				btnSierpinski.setEnabled(true);
 				btnTree.setEnabled(true);
+				btnFlower.setEnabled(true);
 				btnKoch.setEnabled(false);
 				
 				frame.add(currentFractal, BorderLayout.EAST);
@@ -160,6 +184,7 @@ public class Form extends JFrame {
 		});
 		topPanel.add(btnSierpinski);
 		topPanel.add(btnTree);
+		topPanel.add(btnFlower);
 		topPanel.add(btnKoch);
 		
 		setTitle("Fractals");
