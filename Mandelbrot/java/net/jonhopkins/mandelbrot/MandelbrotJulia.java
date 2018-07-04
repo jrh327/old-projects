@@ -69,7 +69,7 @@ public class MandelbrotJulia extends Applet implements MouseMotionListener {
 				for (iteration = 0; iteration < MaxIterations; iteration++) {
 					Z_real2 = Z_real * Z_real;
 					Z_imaginary2 = Z_imaginary * Z_imaginary;
-					if(Z_real2 + Z_imaginary2 > 4) {
+					if (Z_real2 + Z_imaginary2 > 4) {
 						break;
 					}
 					Z_imaginary = 2 * Z_real * Z_imaginary + (julia ? K_imaginary : c_imaginary);

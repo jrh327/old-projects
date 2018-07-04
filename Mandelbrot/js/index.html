@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mandelbrot - Julia</title>
+	<style type="text/css">
+	body {
+		background-color: black;
+	}
+	canvas {
+		padding: 0;
+		margin: auto;
+		display: block;
+	}
+	</style>
+	<script type="text/javascript">
+	window.addEventListener('load', function() {
+		var host = document.location.host;
+		var path = document.location.pathname;
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = '//' + host + path.substr(0, path.lastIndexOf('/')) + '/mandelbrot.js';
+		document.getElementsByTagName('head')[0].appendChild(script);
+	});
+	</script>
+</head>
+<body>
+	<canvas id="canvas">
+		Sorry, your browser does not support canvas.
+	</canvas>
+</body>
+</html>
