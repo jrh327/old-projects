@@ -12,20 +12,16 @@
 		display: block;
 	}
 	</style>
-	<script type="text/javascript">
-	window.addEventListener('load', function() {
-		var host = document.location.host;
-		var path = document.location.pathname;
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.src = '//' + host + path.substr(0, path.lastIndexOf('/')) + '/mandelbrot.js';
-		document.getElementsByTagName('head')[0].appendChild(script);
-	});
-	</script>
+	<script type="text/javascript" src="/common/js/load-script.js"></script>
 </head>
 <body>
 	<canvas id="canvas">
 		Sorry, your browser does not support canvas.
 	</canvas>
+	<script type="text/javascript">
+		LoadScript.load('mandelbrot', {
+			'mandelbrot': 'mandelbrot.js'
+		});
+	</script>
 </body>
 </html>
