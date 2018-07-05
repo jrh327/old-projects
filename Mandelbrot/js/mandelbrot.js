@@ -28,10 +28,6 @@ function init() {
 	draw();
 }
 
-function pixel(xpos, ypos) {
-	context.fillRect(xpos, ypos, 1, 1);
-}
-
 function draw() {
 	var MaxIterations = 25;
 	
@@ -43,6 +39,7 @@ function draw() {
 	}
 	
 	context.clearRect(WIDTH / 2, 0, WIDTH, HEIGHT);
+	var imgData = context.getImageData(minx, 0, WIDTH / 2, HEIGHT);
 	
 	var y, x, iteration;
 	var c_imaginary, c_real, Z_imaginary, Z_real, Z_imaginary2, Z_real2;
@@ -63,14 +60,25 @@ function draw() {
 				Z_real = Z_real2 - Z_imaginary2 + (julia ? K_real : c_real);
 			}
 			if (iteration < MaxIterations) {
+				var pixel = (y * (WIDTH / 2) + x) * 4;
+				var r, g, b;
 				if (iteration < MaxIterations / 2) {
-					context.fillStyle = 'rgb(' + parseInt(255 / MaxIterations / 2 * iteration + 1) + ', 0, 0)';
+					r = parseInt(255 / MaxIterations / 2 * iteration + 1);
+					g = 0;
+					b = 0;
 				} else {
-					context.fillStyle = 'rgb(255, ' + parseInt(255 / MaxIterations * iteration + 1) + ', ' + parseInt(255 / MaxIterations * iteration + 1) + ')';
+					r = 255;
+					g = parseInt(255 / MaxIterations * iteration + 1);
+					b = parseInt(255 / MaxIterations * iteration + 1);
 				}
-				pixel(x, y);
+				
+				imgData.data[pixel] = r;
+				imgData.data[pixel + 1] = g;
+				imgData.data[pixel + 2] = b;
+				imgData.data[pixel + 3] = 255;
 			}
 		}
+		context.putImageData(imgData, minx, 0);
 	}
 	
 	context.fillStyle = 'rgb(255, 255, 255)';
