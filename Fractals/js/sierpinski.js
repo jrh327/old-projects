@@ -5,7 +5,17 @@ var HEIGHT = "700";
 
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
-canvas.addEventListener("mousedown", mouseClick, false);
+
+var txtIterations = document.createElement("input");
+txtIterations.type = "number";
+txtIterations.style.textAlign = "right";
+txtIterations.value = 5;
+canvas.parentNode.appendChild(txtIterations);
+
+var btnDraw = document.createElement("button");
+btnDraw.innerHTML = "Draw";
+btnDraw.addEventListener("click", btnDrawClick, false);
+canvas.parentNode.appendChild(btnDraw);
 
 function midpoint(p1, p2) {
 	var midpoint = {};
@@ -33,7 +43,7 @@ function drawTriangle(v1, v2, v3, i) {
 	}
 }
 
-function mouseClick(e) {
+function btnDrawClick(e) {
 	context.clearRect(0, 0, WIDTH, HEIGHT);
 	context.strokeStyle = 'rgb(255, 255, 255)';
 	
@@ -41,5 +51,5 @@ function mouseClick(e) {
 	var v2 = { x: 25, y: 660 };
 	var v3 = { x: 825, y: 660 };
 
-	drawTriangle(v1, v2, v3, 6);
+	drawTriangle(v1, v2, v3, txtIterations.value);
 }
