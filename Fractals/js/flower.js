@@ -55,8 +55,6 @@ function drawLine(x1, y1, x2, y2) {
 }
 
 function drawTree(x1, y1, l, dl, t, iterations, intraIterations) {
-	var x2 = x1 + l * 5 * Math.cos(t);
-	var y2 = y1 - l * 5 * Math.sin(t);
 	var length;
 	if (iterations < 0) {
 		length = (l * 0.2 * intraIterations) * 5;

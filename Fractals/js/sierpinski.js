@@ -18,10 +18,10 @@ btnDraw.addEventListener("click", btnDrawClick, false);
 canvas.parentNode.appendChild(btnDraw);
 
 function midpoint(p1, p2) {
-	var midpoint = {};
-	midpoint.x = (p1.x + p2.x) / 2;
-	midpoint.y = (p1.y + p2.y) / 2;
-	return midpoint;
+	var point = {};
+	point.x = (p1.x + p2.x) / 2;
+	point.y = (p1.y + p2.y) / 2;
+	return point;
 }
 
 function drawLine(x1, y1, x2, y2) {
@@ -45,7 +45,7 @@ function drawTriangle(v1, v2, v3, i) {
 
 function btnDrawClick(e) {
 	context.clearRect(0, 0, WIDTH, HEIGHT);
-	context.strokeStyle = 'rgb(255, 255, 255)';
+	context.strokeStyle = "rgb(255, 255, 255)";
 	
 	var v1 = { x: 425, y: 50 };
 	var v2 = { x: 25, y: 660 };
