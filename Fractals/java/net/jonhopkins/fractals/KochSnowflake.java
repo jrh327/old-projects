@@ -53,38 +53,38 @@ public class KochSnowflake extends FractalPanel {
 		v[2].X = (int)(150 + 500 * Math.cos(Math.PI / 3));
 		v[2].Y = (int)(550 - 500 * Math.sin(Math.PI / 3));
 		
-		draw_vertices(v[0], v[1], v[2]);
-		
-		draw_snowflake(v[0], v[1], v[2], Integer.parseInt(txtIterations.getText()));
+		//draw_snowflake(v[0], v[1], Integer.parseInt(txtIterations.getText()));
+		//draw_snowflake(v[1], v[2], Integer.parseInt(txtIterations.getText()));
+		draw_snowflake(v[2], v[0], 60, Integer.parseInt(txtIterations.getText()));
 		
 		getRootPane().repaint();
 	}
 	
-	private void draw_snowflake(vertex v1, vertex v2, vertex v3, int i) {
+	private void draw_snowflake(vertex v1, vertex v2,int angle, int i) {
 		if (i > 0) {
-			
+			int length = (int)Math.sqrt((v2.X - v1.X) * (v2.X - v1.X) + (v2.Y - v1.Y) * (v2.Y - v1.Y));
 			// third of way up the side, third of the way from other side
 			// connect at midpoint of side a (length of side) / 3 * 3 ^ .5 away
 			
-			int x1 = v[0].X + ((v[2].X - v[0].X) / 3);
-			int y1 = v[0].Y - ((v[0].Y - v[2].Y) / 3);
-			int x2 = (int)(((v[0].X + v[2].X) / 2) + ((250 * Math.sqrt(3) / 2) * Math.cos(radians(150))));
-			int y2 = (int)(((v[0].Y + v[2].Y) / 2) - ((250 * Math.sqrt(3) / 2) * Math.sin(radians(150))));
-			graphics.drawLine(x1, y1, x2, y2);
+			vertex firstThird = new vertex();
+			firstThird.X = v1.X + ((v2.X - v1.X) / 3);
+			firstThird.Y = v1.Y - ((v1.Y - v2.Y) / 3);
 			
-			x1 = (int)(v[0].X + ((v[2].X - v[0].X) * (2.0 / 3.0)));
-			y1 = (int)(v[0].Y - ((v[0].Y - v[2].Y) * (2.0 / 3.0)));
-			x2 = (int)(((v[0].X + v[2].X) / 2) + ((250 * Math.sqrt(3) / 2) * Math.cos(radians(150))));
-			y2 = (int)(((v[0].Y + v[2].Y) / 2) - ((250 * Math.sqrt(3) / 2) * Math.sin(radians(150))));
-			graphics.drawLine(x1, y1, x2, y2);
+			vertex midpoint = new vertex();
+			midpoint.X = (int)(((v1.X + v2.X) / 2) + (((length / 2) * Math.sqrt(3) / 2) * Math.cos(radians(150))));
+			midpoint.Y = (int)(((v1.Y + v2.Y) / 2) - (((length / 2) * Math.sqrt(3) / 2) * Math.sin(radians(150))));
+			
+			vertex secondThird = new vertex();
+			secondThird.X = (int)(v1.X + ((v2.X - v1.X) * (2.0 / 3.0)));
+			secondThird.Y = (int)(v1.Y - ((v1.Y - v2.Y) * (2.0 / 3.0)));
+			
+			draw_snowflake(v1, firstThird, angle, i - 1);
+			draw_snowflake(firstThird, midpoint, angle, i - 1);
+			draw_snowflake(midpoint, secondThird, angle, i - 1);
+			draw_snowflake(secondThird, v2, angle, i - 1);
+		} else {
+			draw_line(v1, v2);
 		}
-	}
-	
-	private vertex thirdify(vertex p1, vertex p2) {
-		vertex thirdify = new vertex();
-		thirdify.X = (p1.X + p2.X) / 3 * 2;
-		thirdify.Y = (p1.Y + p2.Y) / 3 * 2;
-		return thirdify;
 	}
 	
 	private void draw_line(vertex p1, vertex p2) {
