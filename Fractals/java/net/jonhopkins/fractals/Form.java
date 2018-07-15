@@ -106,6 +106,7 @@ public class Form extends JFrame {
 		btnSierpinski.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				currentFractal.setEnabled(false);
 				frame.remove(currentFractal);
 				currentFractal = new SierpinskiTriangle();
 				currentFractal.setGraphics(pctFractal);
@@ -126,6 +127,7 @@ public class Form extends JFrame {
 		btnTree.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				currentFractal.setEnabled(false);
 				frame.remove(currentFractal);
 				currentFractal = new FractalTree();
 				currentFractal.setGraphics(pctFractal);
@@ -146,6 +148,7 @@ public class Form extends JFrame {
 		btnFlower.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				currentFractal.setEnabled(false);
 				frame.remove(currentFractal);
 				currentFractal = new FractalFlower();
 				currentFractal.setGraphics(pctFractal);
@@ -166,6 +169,7 @@ public class Form extends JFrame {
 		btnKoch.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				currentFractal.setEnabled(false);
 				frame.remove(currentFractal);
 				currentFractal = new KochSnowflake();
 				currentFractal.setGraphics(pctFractal);

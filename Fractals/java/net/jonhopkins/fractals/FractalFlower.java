@@ -83,6 +83,15 @@ public class FractalFlower extends FractalPanel {
 	}
 	
 	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		if (!enabled) {
+			graphics.setColor(Color.BLACK);
+			timer.stop();
+		}
+	}
+	
+	@Override
 	public void mouseClick(int button, int shift, int x, int y) {
 		
 	}
