@@ -91,12 +91,6 @@ public class KochSnowflake extends FractalPanel {
 		graphics.drawLine(p1.X, p1.Y, p2.X, p2.Y);
 	}
 	
-	private void draw_vertices(vertex v1, vertex v2, vertex v3) {
-		draw_line(v1, v2);
-		draw_line(v2, v3);
-		draw_line(v3, v1);
-	}
-	
 	@Override
 	public void mouseClick(int button, int shift, int x, int y) {
 		if (button == 1) {
@@ -109,7 +103,10 @@ public class KochSnowflake extends FractalPanel {
 			v[2].X = (int)(x + 500 * Math.cos(Math.PI / 3));
 			v[2].Y = (int)(y - 500 * Math.sin(Math.PI / 3));
 			
-			draw_vertices(v[0], v[1], v[2]);
+			draw_snowflake(v[0], v[1], 180, Integer.parseInt(txtIterations.getText()));
+			draw_snowflake(v[1], v[2], -60, Integer.parseInt(txtIterations.getText()));
+			draw_snowflake(v[2], v[0], 60, Integer.parseInt(txtIterations.getText()));
+			
 			getRootPane().repaint();
 		}
 		if (button == 2) {
