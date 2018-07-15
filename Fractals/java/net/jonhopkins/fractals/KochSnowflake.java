@@ -53,14 +53,14 @@ public class KochSnowflake extends FractalPanel {
 		v[2].X = (int)(150 + 500 * Math.cos(Math.PI / 3));
 		v[2].Y = (int)(550 - 500 * Math.sin(Math.PI / 3));
 		
-		//draw_snowflake(v[0], v[1], Integer.parseInt(txtIterations.getText()));
-		//draw_snowflake(v[1], v[2], Integer.parseInt(txtIterations.getText()));
+		draw_snowflake(v[0], v[1], 180, Integer.parseInt(txtIterations.getText()));
+		draw_snowflake(v[1], v[2], -60, Integer.parseInt(txtIterations.getText()));
 		draw_snowflake(v[2], v[0], 60, Integer.parseInt(txtIterations.getText()));
 		
 		getRootPane().repaint();
 	}
 	
-	private void draw_snowflake(vertex v1, vertex v2,int angle, int i) {
+	private void draw_snowflake(vertex v1, vertex v2, int angle, int i) {
 		if (i > 0) {
 			int length = (int)Math.sqrt((v2.X - v1.X) * (v2.X - v1.X) + (v2.Y - v1.Y) * (v2.Y - v1.Y));
 			// third of way up the side, third of the way from other side
@@ -71,16 +71,16 @@ public class KochSnowflake extends FractalPanel {
 			firstThird.Y = v1.Y - ((v1.Y - v2.Y) / 3);
 			
 			vertex midpoint = new vertex();
-			midpoint.X = (int)(((v1.X + v2.X) / 2) + (((length / 2) * Math.sqrt(3) / 2) * Math.cos(radians(150))));
-			midpoint.Y = (int)(((v1.Y + v2.Y) / 2) - (((length / 2) * Math.sqrt(3) / 2) * Math.sin(radians(150))));
+			midpoint.X = (int)(((v1.X + v2.X) / 2) + (((length / 3) * Math.sqrt(3) / 2) * Math.cos(radians(angle + 90))));
+			midpoint.Y = (int)(((v1.Y + v2.Y) / 2) - (((length / 3) * Math.sqrt(3) / 2) * Math.sin(radians(angle + 90))));
 			
 			vertex secondThird = new vertex();
 			secondThird.X = (int)(v1.X + ((v2.X - v1.X) * (2.0 / 3.0)));
 			secondThird.Y = (int)(v1.Y - ((v1.Y - v2.Y) * (2.0 / 3.0)));
 			
 			draw_snowflake(v1, firstThird, angle, i - 1);
-			draw_snowflake(firstThird, midpoint, angle, i - 1);
-			draw_snowflake(midpoint, secondThird, angle, i - 1);
+			draw_snowflake(firstThird, midpoint, angle - 60, i - 1);
+			draw_snowflake(midpoint, secondThird, angle + 60, i - 1);
 			draw_snowflake(secondThird, v2, angle, i - 1);
 		} else {
 			draw_line(v1, v2);
