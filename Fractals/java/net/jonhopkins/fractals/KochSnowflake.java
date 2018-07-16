@@ -19,13 +19,7 @@ public class KochSnowflake extends FractalPanel {
 		int Y;
 	}
 	
-	private vertex[] v = new vertex[3];
-	
 	public KochSnowflake() {
-		for (int i = 0; i < v.length; i++) {
-			v[i] = new vertex();
-		}
-		
 		cmdDraw = new JButton("Draw");
 		cmdDraw.addActionListener(new ActionListener() {
 			@Override
@@ -46,16 +40,21 @@ public class KochSnowflake extends FractalPanel {
 	private void cmdDraw_Click() {
 		graphics.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 		
-		v[0].X = 150;
-		v[0].Y = 550;
-		v[1].X = 650;
-		v[1].Y = 550;
-		v[2].X = (int)(150 + 500 * Math.cos(Math.PI / 3));
-		v[2].Y = (int)(550 - 500 * Math.sin(Math.PI / 3));
+		vertex v0 = new vertex();
+		v0.X = 150;
+		v0.Y = 550;
 		
-		draw_snowflake(v[0], v[1], 180, Integer.parseInt(txtIterations.getText()));
-		draw_snowflake(v[1], v[2], -60, Integer.parseInt(txtIterations.getText()));
-		draw_snowflake(v[2], v[0], 60, Integer.parseInt(txtIterations.getText()));
+		vertex v1 = new vertex();
+		v1.X = 650;
+		v1.Y = 550;
+		
+		vertex v2 = new vertex();
+		v2.X = (int)(150 + 500 * Math.cos(Math.PI / 3));
+		v2.Y = (int)(550 - 500 * Math.sin(Math.PI / 3));
+		
+		draw_snowflake(v1, v1, 180, Integer.parseInt(txtIterations.getText()));
+		draw_snowflake(v1, v2, -60, Integer.parseInt(txtIterations.getText()));
+		draw_snowflake(v2, v0, 60, Integer.parseInt(txtIterations.getText()));
 		
 		getRootPane().repaint();
 	}
@@ -96,16 +95,21 @@ public class KochSnowflake extends FractalPanel {
 		if (button == 1) {
 			graphics.clearRect(0, 0, RENDER_WIDTH, RENDER_HEIGHT);
 			
-			v[0].X = x;
-			v[0].Y = y;
-			v[1].X = x + 500;
-			v[1].Y = y;
-			v[2].X = (int)(x + 500 * Math.cos(Math.PI / 3));
-			v[2].Y = (int)(y - 500 * Math.sin(Math.PI / 3));
+			vertex v0 = new vertex();
+			v0.X = x;
+			v0.Y = y;
 			
-			draw_snowflake(v[0], v[1], 180, Integer.parseInt(txtIterations.getText()));
-			draw_snowflake(v[1], v[2], -60, Integer.parseInt(txtIterations.getText()));
-			draw_snowflake(v[2], v[0], 60, Integer.parseInt(txtIterations.getText()));
+			vertex v1 = new vertex();
+			v1.X = x + 500;
+			v1.Y = y;
+			
+			vertex v2 = new vertex();
+			v2.X = (int)(x + 500 * Math.cos(Math.PI / 3));
+			v2.Y = (int)(y - 500 * Math.sin(Math.PI / 3));
+			
+			draw_snowflake(v0, v1, 180, Integer.parseInt(txtIterations.getText()));
+			draw_snowflake(v1, v2, -60, Integer.parseInt(txtIterations.getText()));
+			draw_snowflake(v2, v0, 60, Integer.parseInt(txtIterations.getText()));
 			
 			getRootPane().repaint();
 		}
