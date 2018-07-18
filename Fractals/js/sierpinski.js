@@ -1,7 +1,9 @@
 (function() {
+	"use strict";
+
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
-	var WIDTH="900";
+	var WIDTH = "900";
 	var HEIGHT = "700";
 
 	canvas.width = WIDTH;
