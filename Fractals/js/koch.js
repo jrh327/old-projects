@@ -89,4 +89,4 @@
 		drawSnowflake(v1, v2, -60, txtIterations.value);
 		drawSnowflake(v2, v0, 60, txtIterations.value);
 	}
-})();
+}());

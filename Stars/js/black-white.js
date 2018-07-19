@@ -1,4 +1,6 @@
 (function() {
+	"use strict";
+
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 	var WIDTH = 500;
@@ -23,15 +25,6 @@
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
 
-	window.requestAnimationFrame(draw);
-
-	function draw() {
-		drawStar();
-		window.setTimeout(function() {
-			window.requestAnimationFrame(draw);
-		}, 20);
-	}
-
 	function drawLine(xpos, ypos) {
 		var x1 = ORIGIN_X + (xpos * PIXELS_PER_X_UNIT);
 		var y1 = ORIGIN_Y;
@@ -55,13 +48,13 @@
 			blue = 0;
 		}
 
-		context.strokeStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+		context.strokeStyle = "rgb(" + red + ", " + green + ", " + blue + ")";
 		drawLine(xpos, ypos);
 
 		if (quad1) {
 			xpos = xpos - 1;
 			ypos = Math.abs(xpos - 21);
-			if (xpos == -1) {
+			if (xpos === -1) {
 				xpos = 0;
 				quad1 = false;
 				quad2 = true;
@@ -70,7 +63,7 @@
 		if (quad2) {
 			xpos = xpos - 1;
 			ypos = Math.abs(xpos + 21);
-			if (xpos == -22) {
+			if (xpos === -22) {
 				quad2 = false;
 				quad3 = true;
 			}
@@ -78,7 +71,7 @@
 		if (quad3) {
 			xpos = xpos + 1;
 			ypos = -Math.abs(xpos + 21);
-			if (xpos == 1) {
+			if (xpos === 1) {
 				xpos = 0;
 				quad3 = false;
 				quad4 = true;
@@ -87,7 +80,7 @@
 		if (quad4) {
 			xpos = xpos + 1;
 			ypos = -Math.abs(xpos - 21);
-			if (xpos == 21) {
+			if (xpos === 21) {
 				ypos = 0;
 				quad4 = false;
 				quad1 = true;
@@ -96,4 +89,13 @@
 			}
 		}
 	}
-})();
+
+	function draw() {
+		drawStar();
+		window.setTimeout(function() {
+			window.requestAnimationFrame(draw);
+		}, 20);
+	}
+
+	window.requestAnimationFrame(draw);
+}());

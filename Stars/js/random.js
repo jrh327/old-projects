@@ -1,4 +1,6 @@
 (function() {
+	"use strict";
+
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 	var WIDTH = 500;
@@ -12,15 +14,6 @@
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
 
-	window.requestAnimationFrame(draw);
-
-	function draw() {
-		drawStar();
-		window.setTimeout(function() {
-			window.requestAnimationFrame(draw);
-		}, 1);
-	}
-
 	function drawLine(xpos, ypos) {
 		var red = Math.floor(Math.random() * 256);
 		var green = Math.floor(Math.random() * 256);
@@ -31,7 +24,7 @@
 		var x2 = ORIGIN_X;
 		var y2 = ORIGIN_Y - (ypos * PIXELS_PER_Y_UNIT);
 
-		context.strokeStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+		context.strokeStyle = "rgb(" + red + ", " + green + ", " + blue + ")";
 		context.beginPath();
 		context.moveTo(x1, y1);
 		context.lineTo(x2, y2);
@@ -39,21 +32,32 @@
 	}
 
 	function drawStar() {
-		for (var xpos = 21; xpos > -1; xpos--) {
-			var ypos = Math.abs(xpos - 21);
+		var xpos;
+		var ypos;
+		for (xpos = 21; xpos > -1; xpos -= 1) {
+			ypos = Math.abs(xpos - 21);
 			drawLine(xpos, ypos);
 		}
-		for (var xpos = 0; xpos > -22; xpos--) {
-			var ypos = Math.abs(xpos + 21);
+		for (xpos = 0; xpos > -22; xpos -= 1) {
+			ypos = Math.abs(xpos + 21);
 			drawLine(xpos, ypos);
 		}
-		for (var xpos = -21; xpos < 1; xpos++) {
-			var ypos = -Math.abs(xpos + 21);
+		for (xpos = -21; xpos < 1; xpos += 1) {
+			ypos = -Math.abs(xpos + 21);
 			drawLine(xpos, ypos);
 		}
-		for (var xpos = 0; xpos < 22; xpos++) {
-			var ypos = -Math.abs(xpos - 21);
+		for (xpos = 0; xpos < 22; xpos += 1) {
+			ypos = -Math.abs(xpos - 21);
 			drawLine(xpos, ypos);
 		}
 	}
-})();
+
+	function draw() {
+		drawStar();
+		window.setTimeout(function() {
+			window.requestAnimationFrame(draw);
+		}, 1);
+	}
+
+	window.requestAnimationFrame(draw);
+}());

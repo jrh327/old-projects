@@ -20,36 +20,6 @@
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
 
-	window.requestAnimationFrame(draw);
-
-	function draw() {
-		if (pausedFrames <= 0) {
-			context.clearRect(0, 0, WIDTH, HEIGHT);
-			context.fillStyle = background;
-			context.fillRect(0, 0, WIDTH, HEIGHT);
-
-			theta = Math.PI / 24;
-
-			drawTree(WIDTH / 2, HEIGHT - 25, stemHeight, shrinkFactor, Math.PI / 2, maxIterations, intraIterations);
-
-			intraIterations++;
-			if (intraIterations > 5) {
-				intraIterations = 1;
-				maxIterations++;
-				if (maxIterations > 12) {
-					maxIterations = -1;
-					pausedFrames = framesToPauses;
-				}
-			}
-		} else {
-			pausedFrames--;
-		}
-
-		window.setTimeout(function() {
-			window.requestAnimationFrame(draw);
-		}, 50);
-	}
-
 	function drawLine(x1, y1, x2, y2) {
 		context.beginPath();
 		context.moveTo(x1, y1);
@@ -78,9 +48,39 @@
 		if (iterations > 0) {
 			drawTree(x2, y2, l * dl, dl, t + theta * ((iterations + 1) / 12.0), iterations - 1, intraIterations);
 			drawTree(x2, y2, l * dl, dl, t - theta * ((iterations + 1) / 12.0), iterations - 1, intraIterations);
-		} else if (iterations == 0) {
+		} else if (iterations === 0) {
 			drawTree(x2, y2, l * dl / 2, dl, t + theta * ((iterations + 1) / 12.0), iterations - 1, intraIterations);
 			drawTree(x2, y2, l * dl / 2, dl, t - theta * ((iterations + 1) / 12.0), iterations - 1, intraIterations);
 		}
 	}
-})();
+
+	function draw() {
+		if (pausedFrames <= 0) {
+			context.clearRect(0, 0, WIDTH, HEIGHT);
+			context.fillStyle = background;
+			context.fillRect(0, 0, WIDTH, HEIGHT);
+
+			theta = Math.PI / 24;
+
+			drawTree(WIDTH / 2, HEIGHT - 25, stemHeight, shrinkFactor, Math.PI / 2, maxIterations, intraIterations);
+
+			intraIterations += 1;
+			if (intraIterations > 5) {
+				intraIterations = 1;
+				maxIterations += 1;
+				if (maxIterations > 12) {
+					maxIterations = -1;
+					pausedFrames = framesToPauses;
+				}
+			}
+		} else {
+			pausedFrames -= 1;
+		}
+
+		window.setTimeout(function() {
+			window.requestAnimationFrame(draw);
+		}, 50);
+	}
+
+	window.requestAnimationFrame(draw);
+}());
