@@ -44,8 +44,10 @@
 
 			var host = document.location.host;
 			var path = document.location.pathname;
-			if (path.lastIndexOf("/") < path.length - 1) {
+			if (path.lastIndexOf("/") == -1) {
 				path = path + "/";
+			} else if (path.lastIndexOf("/") < path.length - 1) {
+				path = path.substr(0, path.lastIndexOf("/") + 1);
 			}
 			var script = document.createElement("script");
 			script.type = "text/javascript";
