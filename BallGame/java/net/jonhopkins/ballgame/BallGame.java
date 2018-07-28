@@ -22,8 +22,8 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		this.buffer = createImage(this.dim.width, this.dim.height);
 		this.bufferGraphics = this.buffer.getGraphics();
 		
-		this.player = new Ball(20.0D, 100.0D, Color.green);
-		this.enemy = new Ball(100.0D, 175.0D, Color.yellow);
+		this.player = new Ball(20.0D, 100.0D, Color.green, this.dim);
+		this.enemy = new Ball(100.0D, 175.0D, Color.yellow, this.dim);
 		this.bonus = new Bonus(Math.random() * this.dim.width, Math.random() * this.dim.height - 50, Color.orange, "speed");
 		this.bonus.onField = false;
 		
@@ -46,12 +46,12 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		while (true) {
 			repaint();
 			
-			if (!this.player.isAlive) {
+			if (!this.player.isAlive()) {
 				break;
 			}
 			
-			this.player.update();
-			this.enemy.update();
+			this.player.update(counter);
+			this.enemy.update(counter);
 			
 			if (this.enemyAttacking) {
 				if ((int)(Math.random() * 500.0D) == 37) {
@@ -84,14 +84,14 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 				if (checkCollision(this.bonus, this.player)) {
 					this.bonus.activate(this.player);
 				} else {
-					this.bonus.decOnFieldTime();
+					this.bonus.decOnFieldTime(counter);
 					
 					if (this.bonus.getOnFieldTime() <= 0) {
 						this.bonus.onField = false;
 					}
 				}
 			} else if (this.bonus.isActive) {
-				this.bonus.decTime();
+				this.bonus.decTime(counter);
 				
 				if (this.bonus.getTime() <= 0) {
 					this.bonus.deactivate(this.player);
@@ -152,7 +152,7 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		if ((this.bonus.isActive) && (this.bonus.getTime() > 0)) {
 			g.drawString("Speed Left: " + this.bonus.getTime(), this.dim.width - 100, this.dim.height - 20);
 		}
-		if (!this.player.isAlive) {
+		if (!this.player.isAlive()) {
 			g.drawString("You are dead", this.dim.width / 2 - 30, this.dim.height / 3);
 		}
 	}
@@ -169,185 +169,6 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	}
 	
 	public void mouseDragged(MouseEvent event) {}
-	
-	class Obj {
-		public Obj(double x, double y, Color c) {
-			this.x_pos = x;
-			this.y_pos = y;
-			this.color = c;
-		}
-		
-		public void draw(Graphics g) {
-			g.setColor(this.color);
-			g.fillOval((int)this.x_pos - this.radius, (int)this.y_pos - this.radius, 2 * this.radius, 2 * this.radius);
-		}
-		
-		public double getX() {
-			return this.x_pos;
-		}
-		
-		public double getY() {
-			return this.y_pos;
-		}
-		
-		public int getRadius() {
-			return this.radius;
-		}
-		
-		public void setColor(Color c) {
-			this.color = c;
-		}
-		
-		protected double x_pos;
-		protected double y_pos;
-		protected int radius;
-		protected Color color;
-	}
-	
-	class Ball extends BallGame.Obj {
-		private double x_vel;
-		
-		public Ball(double x, double y, Color c) {
-			super(x, y, c);
-			
-			this.radius = 20;
-			
-			double direction = Math.random() * 6.283185307179586D;
-			this.x_vel = (Math.cos(direction) * this.speed);
-			this.y_vel = (Math.sin(direction) * this.speed);
-			
-			this.health = 100;
-		}
-		
-		public void changeDirection(double x2, double y2) {
-			double x = x2 - this.x_pos;
-			double y = y2 - this.y_pos;
-			
-			if ((x == 0D) || (y == 0D)) {
-				return;
-			}
-			
-			double hyp = Math.pow(Math.pow(x, 2.0D) + Math.pow(y, 2.0D), 0.5D);
-			
-			if (hyp == 0D) {
-				return;
-			}
-			
-			this.x_vel = (x / hyp * this.speed);
-			this.y_vel = (y / hyp * this.speed);
-		}
-		
-		public void update() {
-			this.x_pos += this.x_vel;
-			this.y_pos += this.y_vel;
-			
-			if ((this.x_pos - this.radius <= 0D) || (this.x_pos + this.radius >= BallGame.this.dim.width)) {
-				this.x_vel *= -1.0D;
-			}
-			if ((this.y_pos - this.radius <= 0D) || (this.y_pos + this.radius >= BallGame.this.dim.height - 50)) {
-				this.y_vel *= -1.0D;
-			}
-			
-			if (BallGame.this.counter == 100) {
-				if (getHealth() > 100) {
-					incHealth(-1);
-				} else if (getHealth() < 100) {
-					incHealth(1);
-				}
-			}
-		}
-		
-		public void draw(Graphics g) {
-			g.setColor(this.color);
-			g.fillOval((int)this.x_pos - this.radius, (int)this.y_pos - this.radius, 2 * this.radius, 2 * this.radius);
-		}
-		
-		public double getSpeed() {
-			return this.speed;
-		}
-		
-		public int getHealth() {
-			return this.health;
-		}
-		
-		public void incHealth(int h) {
-			this.health += h;
-			
-			if (this.health <= 0) {
-				this.isAlive = false;
-			}
-		}
-		
-		public void incSpeed(double s) {
-			this.speed += s;
-		}
-		
-		private double y_vel;
-		private double speed = 1D;
-		private int health;
-		private boolean isAlive = true;
-	}
-	
-	class Bonus extends BallGame.Obj {
-		public Bonus(double x, double y, Color c, String s) {
-			super(x, y, c);
-			
-			if (s == "health") {
-				this.healthBoost = ((int)(Math.random() * 10.0D) + 10);
-			} else if (s == "speed") {
-				this.speedBoost += Math.random() * 1.7D + 0.3D;
-				this.timer += (int)(Math.random() * 60.0D) + 40;
-			} else if (s == "ultimatebonus") {
-				this.healthBoost = 100;
-				this.speedBoost += 2.0D;
-				this.timer += 150;
-			}
-			
-			this.radius = 5;
-			this.onField = true;
-			this.onFieldTimer = 150;
-		}
-		
-		public void activate(BallGame.Ball b) {
-			b.incSpeed(this.speedBoost);
-			b.incHealth(this.healthBoost);
-			if (b.getHealth() > 100) {
-				b.incHealth(100 - b.getHealth());
-			}
-			this.onField = false;
-			this.isActive = true;
-		}
-		
-		public void deactivate(BallGame.Ball b) {
-			b.incSpeed(-this.speedBoost);
-			this.speedBoost = 0D;
-			this.healthBoost = 0;
-			this.isActive = false;
-		}
-		
-		public int getTime() {
-			return this.timer;
-		}
-		
-		public int getOnFieldTime() {
-			return this.onFieldTimer;
-		}
-		
-		public void decTime() {
-			if ((this.timer > 0) && (BallGame.this.counter % 5 == 0)) this.timer -= 1;
-		}
-		
-		public void decOnFieldTime() {
-			if ((this.timer > 0) && (BallGame.this.counter % 5 == 0)) this.onFieldTimer -= 1;
-		}
-		
-		private int timer = 0;
-		private int onFieldTimer = 0;
-		private double speedBoost = 0D;
-		private int healthBoost = 0;
-		public boolean isActive = false;
-		public boolean onField = false;
-	}
 	
 	Bonus bonus;
 	int counter;
