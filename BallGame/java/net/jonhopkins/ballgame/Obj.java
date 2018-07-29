@@ -31,6 +31,13 @@ class Obj {
 		this.color = c;
 	}
 	
+	public boolean checkCollision(Obj o2) {
+		double distance = Math.pow(
+				Math.pow(this.x_pos - o2.x_pos, 2.0) + Math.pow(this.y_pos - o2.y_pos, 2.0),
+				0.5);
+		return distance < this.radius + o2.radius * 0.9D;
+	}
+	
 	protected double x_pos;
 	protected double y_pos;
 	protected int radius;

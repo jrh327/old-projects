@@ -81,7 +81,7 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 					}
 				}
 			} else if (this.bonus.onField) {
-				if (checkCollision(this.bonus, this.player)) {
+				if (this.player.checkCollision(this.bonus)) {
 					this.bonus.activate(this.player);
 				} else {
 					this.bonus.decOnFieldTime(counter);
@@ -112,12 +112,8 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		}
 	}
 	
-	public boolean checkCollision(Obj o1, Obj o2) {
-		return Math.pow(Math.pow(o1.getX() - o2.getX(), 2.0D) + Math.pow(o1.getY() - o2.getY(), 2.0D), 0.5D) < o1.getRadius() + o2.getRadius() * 0.9D;
-	}
-	
 	public void checkAttack() {
-		if (checkCollision(this.enemy, this.player)) {
+		if (this.enemy.checkCollision(this.player)) {
 			this.player.incHealth(-(int)(Math.random() * 15.0D));
 			this.enemyAttacking = false;
 			this.enemy.setColor(Color.yellow);
@@ -125,6 +121,7 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		}
 	}
 	
+	@Override
 	public void update(Graphics g) {
 		if (this.buffer == null) {
 			this.buffer = createImage(getSize().width, getSize().height);
