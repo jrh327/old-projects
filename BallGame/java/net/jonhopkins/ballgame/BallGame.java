@@ -10,21 +10,21 @@ import java.awt.event.MouseMotionListener;
 
 public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	private static final long serialVersionUID = 4478108492322269640L;
-	Ball player;
-	Ball enemy;
+	Player player;
+	Enemy enemy;
 	
 	public void init() {
 		setBackground(Color.blue);
 		resize(400, 400);
 		
-		this.dim = getSize();
+		BallGame.dim = getSize();
 		
-		this.buffer = createImage(this.dim.width, this.dim.height);
+		this.buffer = createImage(BallGame.dim.width, BallGame.dim.height);
 		this.bufferGraphics = this.buffer.getGraphics();
 		
-		this.player = new Ball(20.0D, 100.0D, Color.green, this.dim);
-		this.enemy = new Ball(100.0D, 175.0D, Color.yellow, this.dim);
-		this.bonus = new Bonus(Math.random() * this.dim.width, Math.random() * this.dim.height - 50, Color.orange, "speed");
+		this.player = new Player();
+		this.enemy = new Enemy(player);
+		this.bonus = new Bonus(Math.random() * BallGame.dim.width, Math.random() * BallGame.dim.height - 50, Color.orange, "speed");
 		this.bonus.onField = false;
 		
 		addMouseMotionListener(this);
@@ -50,34 +50,22 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 				break;
 			}
 			
+			final int width = BallGame.dim.width;
+			final int height = BallGame.dim.height;
+			
 			this.player.update(counter);
 			this.enemy.update(counter);
-			
-			if (this.enemyAttacking) {
-				if ((int)(Math.random() * 500.0D) == 37) {
-					this.enemyAttacking = false;
-					this.enemy.setColor(Color.yellow);
-				} else {
-					this.enemy.changeDirection(this.player.getX(), this.player.getY());
-					checkAttack();
-				}
-			} else if ((int)(Math.random() * 100.0D) == 37) {
-				this.enemy.setColor(Color.red);
-				this.enemyAttacking = true;
-			} else if ((int)(Math.random() * 50.0D) == 5) {
-				this.enemy.changeDirection(Math.random() * this.dim.width, Math.random() * this.dim.height - 50);
-			}
 			
 			if ((!this.bonus.onField) && (!this.bonus.isActive)) {
 				if ((int)(Math.random() * 250.0D) == 37) {
 					int b = (int)(Math.random() * 20.0D);
 					
 					if ((b >= 0) && (b < 10)) {
-						this.bonus = new Bonus(Math.random() * this.dim.width, Math.random() * this.dim.height - 50, Color.orange, "speed");
+						this.bonus = new Bonus(Math.random() * width, Math.random() * height - 50, Color.orange, "speed");
 					} else if ((b > 11) && (b <= 20)) {
-						this.bonus = new Bonus(Math.random() * this.dim.width, Math.random() * this.dim.height - 50, Color.red, "health");
+						this.bonus = new Bonus(Math.random() * width, Math.random() * height - 50, Color.red, "health");
 					} else if (b == 11) {
-						this.bonus = new Bonus(Math.random() * this.dim.width, Math.random() * this.dim.height - 50, Color.yellow, "ultimatebonus");
+						this.bonus = new Bonus(Math.random() * width, Math.random() * height - 50, Color.yellow, "ultimatebonus");
 					}
 				}
 			} else if (this.bonus.onField) {
@@ -112,15 +100,6 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		}
 	}
 	
-	public void checkAttack() {
-		if (this.enemy.checkCollision(this.player)) {
-			this.player.incHealth(-(int)(Math.random() * 15.0D));
-			this.enemyAttacking = false;
-			this.enemy.setColor(Color.yellow);
-			this.enemy.changeDirection(Math.random() * this.dim.width, Math.random() * this.dim.height - 50);
-		}
-	}
-	
 	@Override
 	public void update(Graphics g) {
 		if (this.buffer == null) {
@@ -136,21 +115,24 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	}
 	
 	public void drawHUD(Graphics g) {
+		final int width = BallGame.dim.width;
+		final int height = BallGame.dim.height;
+		
 		g.setColor(Color.black);
-		g.fillRect(0, this.dim.height - 50, this.dim.width, 50);
+		g.fillRect(0, dim.height - 50, width, 50);
 		g.setColor(Color.red);
-		g.fillRect(10, this.dim.height - 35, this.player.getHealth(), 20);
+		g.fillRect(10, height - 35, this.player.getHealth(), 20);
 		if ((this.bonus.isActive) && (this.bonus.getTime() > 0)) {
 			g.setColor(Color.orange);
-			g.fillRect(this.dim.width - 10 - this.bonus.getTime(), this.dim.height - 35, this.bonus.getTime(), 20);
+			g.fillRect(width - 10 - this.bonus.getTime(), height - 35, this.bonus.getTime(), 20);
 		}
 		g.setColor(Color.white);
-		g.drawString("Health: " + this.player.getHealth() + "%", 20, this.dim.height - 20);
+		g.drawString("Health: " + this.player.getHealth() + "%", 20, height - 20);
 		if ((this.bonus.isActive) && (this.bonus.getTime() > 0)) {
-			g.drawString("Speed Left: " + this.bonus.getTime(), this.dim.width - 100, this.dim.height - 20);
+			g.drawString("Speed Left: " + this.bonus.getTime(), width - 100, height - 20);
 		}
 		if (!this.player.isAlive()) {
-			g.drawString("You are dead", this.dim.width / 2 - 30, this.dim.height / 3);
+			g.drawString("You are dead", width / 2 - 30, height / 3);
 		}
 	}
 	
@@ -172,5 +154,5 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	boolean enemyAttacking = false;
 	Image buffer;
 	Graphics bufferGraphics;
-	Dimension dim;
+	public static Dimension dim;
 }

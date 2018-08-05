@@ -1,16 +1,14 @@
 package net.jonhopkins.ballgame;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 
 class Ball extends Obj {
 	private double x_vel;
 	
-	public Ball(double x, double y, Color c, Dimension bounds) {
+	public Ball(double x, double y, Color c) {
 		super(x, y, c);
 		
-		this.dim = bounds;
 		this.radius = 20;
 		
 		double direction = Math.random() * 6.283185307179586D;
@@ -42,10 +40,10 @@ class Ball extends Obj {
 		this.x_pos += this.x_vel;
 		this.y_pos += this.y_vel;
 		
-		if ((this.x_pos - this.radius <= 0D) || (this.x_pos + this.radius >= this.dim.width)) {
+		if ((this.x_pos - this.radius <= 0D) || (this.x_pos + this.radius >= BallGame.dim.width)) {
 			this.x_vel *= -1.0D;
 		}
-		if ((this.y_pos - this.radius <= 0D) || (this.y_pos + this.radius >= this.dim.height - 50)) {
+		if ((this.y_pos - this.radius <= 0D) || (this.y_pos + this.radius >= BallGame.dim.height - 50)) {
 			this.y_vel *= -1.0D;
 		}
 		
@@ -87,7 +85,6 @@ class Ball extends Obj {
 		return this.isAlive;
 	}
 	
-	private Dimension dim;
 	private double y_vel;
 	private double speed = 1D;
 	private int health;
