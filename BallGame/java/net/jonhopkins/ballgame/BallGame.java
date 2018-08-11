@@ -24,7 +24,7 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		
 		this.player = new Player();
 		this.enemy = new Enemy(player);
-		this.bonus = new Bonus(Math.random() * BallGame.dim.width, Math.random() * BallGame.dim.height - 50, Color.orange, "speed");
+		this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.orange, "speed");
 		this.bonus.onField = false;
 		
 		addMouseMotionListener(this);
@@ -50,9 +50,6 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 				break;
 			}
 			
-			final int width = BallGame.dim.width;
-			final int height = BallGame.dim.height;
-			
 			this.player.update(counter);
 			this.enemy.update(counter);
 			
@@ -61,11 +58,11 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 					int b = (int)(Math.random() * 20.0D);
 					
 					if ((b >= 0) && (b < 10)) {
-						this.bonus = new Bonus(Math.random() * width, Math.random() * height - 50, Color.orange, "speed");
+						this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.orange, "speed");
 					} else if ((b > 11) && (b <= 20)) {
-						this.bonus = new Bonus(Math.random() * width, Math.random() * height - 50, Color.red, "health");
+						this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.red, "health");
 					} else if (b == 11) {
-						this.bonus = new Bonus(Math.random() * width, Math.random() * height - 50, Color.yellow, "ultimatebonus");
+						this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.yellow, "ultimatebonus");
 					}
 				}
 			} else if (this.bonus.onField) {
@@ -148,6 +145,14 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	}
 	
 	public void mouseDragged(MouseEvent event) {}
+	
+	public static double getRandomXPos() {
+		return Math.random() * BallGame.dim.width;
+	}
+	
+	public static double getRandomYPos() {
+		return Math.random() * BallGame.dim.height - 50;
+	}
 	
 	Bonus bonus;
 	int counter;

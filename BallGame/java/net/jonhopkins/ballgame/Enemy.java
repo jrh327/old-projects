@@ -27,8 +27,8 @@ public class Enemy extends Ball {
 			setColor(Color.red);
 			isAttacking = true;
 		} else if ((int)(Math.random() * 50.0D) == 5) {
-			double newX = Math.random() * BallGame.dim.width;
-			double newY = Math.random() * BallGame.dim.height - 50;
+			double newX = BallGame.getRandomXPos();
+			double newY = BallGame.getRandomYPos();
 			changeDirection(newX, newY);
 		}
 	}
@@ -38,8 +38,8 @@ public class Enemy extends Ball {
 			target.incHealth(-(int)(Math.random() * 15.0D));
 			isAttacking = false;
 			setColor(Color.yellow);
-			double newX = Math.random() * BallGame.dim.width;
-			double newY = Math.random() * BallGame.dim.height - 50;
+			double newX = BallGame.getRandomXPos();
+			double newY = BallGame.getRandomYPos();
 			changeDirection(newX, newY);
 		}
 	}
