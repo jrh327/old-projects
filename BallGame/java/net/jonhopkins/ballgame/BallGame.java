@@ -10,8 +10,13 @@ import java.awt.event.MouseMotionListener;
 
 public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	private static final long serialVersionUID = 4478108492322269640L;
-	Player player;
-	Enemy enemy;
+	private Player player;
+	private Enemy enemy;
+	private Bonus bonus;
+	private int counter;
+	private Image buffer;
+	private Graphics bufferGraphics;
+	public static Dimension dim;
 	
 	public void init() {
 		setBackground(Color.blue);
@@ -25,7 +30,7 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		this.player = new Player();
 		this.enemy = new Enemy(player);
 		this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.orange, "speed");
-		this.bonus.onField = false;
+		this.bonus.setOnField(false);
 		
 		addMouseMotionListener(this);
 		
@@ -53,7 +58,7 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 			this.player.update(counter);
 			this.enemy.update(counter);
 			
-			if ((!this.bonus.onField) && (!this.bonus.isActive)) {
+			if ((!this.bonus.isOnField()) && (!this.bonus.isActive())) {
 				if ((int)(Math.random() * 250.0D) == 37) {
 					int b = (int)(Math.random() * 20.0D);
 					
@@ -65,17 +70,17 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 						this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.yellow, "ultimatebonus");
 					}
 				}
-			} else if (this.bonus.onField) {
+			} else if (this.bonus.isOnField()) {
 				if (this.player.checkCollision(this.bonus)) {
 					this.bonus.activate(this.player);
 				} else {
 					this.bonus.decOnFieldTime(counter);
 					
 					if (this.bonus.getOnFieldTime() <= 0) {
-						this.bonus.onField = false;
+						this.bonus.setOnField(false);
 					}
 				}
-			} else if (this.bonus.isActive) {
+			} else if (this.bonus.isActive()) {
 				this.bonus.decTime(counter);
 				
 				if (this.bonus.getTime() <= 0) {
@@ -119,13 +124,13 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		g.fillRect(0, dim.height - 50, width, 50);
 		g.setColor(Color.red);
 		g.fillRect(10, height - 35, this.player.getHealth(), 20);
-		if ((this.bonus.isActive) && (this.bonus.getTime() > 0)) {
+		if ((this.bonus.isActive()) && (this.bonus.getTime() > 0)) {
 			g.setColor(Color.orange);
 			g.fillRect(width - 10 - this.bonus.getTime(), height - 35, this.bonus.getTime(), 20);
 		}
 		g.setColor(Color.white);
 		g.drawString("Health: " + this.player.getHealth() + "%", 20, height - 20);
-		if ((this.bonus.isActive) && (this.bonus.getTime() > 0)) {
+		if ((this.bonus.isActive()) && (this.bonus.getTime() > 0)) {
 			g.drawString("Speed Left: " + this.bonus.getTime(), width - 100, height - 20);
 		}
 		if (!this.player.isAlive()) {
@@ -134,7 +139,9 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	}
 	
 	public void paint(Graphics g) {
-		if (this.bonus.onField) this.bonus.draw(g);
+		if (this.bonus.isOnField()) {
+			this.bonus.draw(g);
+		}
 		this.player.draw(g);
 		this.enemy.draw(g);
 		drawHUD(g);
@@ -153,11 +160,4 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	public static double getRandomYPos() {
 		return Math.random() * BallGame.dim.height - 50;
 	}
-	
-	Bonus bonus;
-	int counter;
-	boolean enemyAttacking = false;
-	Image buffer;
-	Graphics bufferGraphics;
-	public static Dimension dim;
 }

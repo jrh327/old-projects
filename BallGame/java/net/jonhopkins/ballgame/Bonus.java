@@ -3,6 +3,13 @@ package net.jonhopkins.ballgame;
 import java.awt.Color;
 
 class Bonus extends Obj {
+	private int timer = 0;
+	private int onFieldTimer = 0;
+	private double speedBoost = 0D;
+	private int healthBoost = 0;
+	private boolean isActive = false;
+	private boolean isOnField = false;
+	
 	public Bonus(double x, double y, Color c, String s) {
 		super(x, y, c);
 		
@@ -18,7 +25,7 @@ class Bonus extends Obj {
 		}
 		
 		this.radius = 5;
-		this.onField = true;
+		this.isOnField = true;
 		this.onFieldTimer = 150;
 	}
 	
@@ -28,7 +35,7 @@ class Bonus extends Obj {
 		if (b.getHealth() > 100) {
 			b.incHealth(100 - b.getHealth());
 		}
-		this.onField = false;
+		this.isOnField = false;
 		this.isActive = true;
 	}
 	
@@ -55,10 +62,19 @@ class Bonus extends Obj {
 		if ((this.timer > 0) && (counter % 5 == 0)) this.onFieldTimer -= 1;
 	}
 	
-	private int timer = 0;
-	private int onFieldTimer = 0;
-	private double speedBoost = 0D;
-	private int healthBoost = 0;
-	public boolean isActive = false;
-	public boolean onField = false;
+	public boolean isActive() {
+		return this.isActive;
+	}
+	
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	
+	public boolean isOnField() {
+		return this.isOnField;
+	}
+	
+	public void setOnField(boolean isOnField) {
+		this.isOnField = isOnField;
+	}
 }

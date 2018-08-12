@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 class Ball extends Obj {
-	private double x_vel;
+	private double velocityX;
+	private double velocityY;
+	private double speed = 1D;
+	private int health;
+	private boolean isAlive = true;
 	
 	public Ball(double x, double y, Color c) {
 		super(x, y, c);
@@ -12,15 +16,15 @@ class Ball extends Obj {
 		this.radius = 20;
 		
 		double direction = Math.random() * 6.283185307179586D;
-		this.x_vel = (Math.cos(direction) * this.speed);
-		this.y_vel = (Math.sin(direction) * this.speed);
+		this.velocityX = (Math.cos(direction) * this.speed);
+		this.velocityY = (Math.sin(direction) * this.speed);
 		
 		this.health = 100;
 	}
 	
 	public void changeDirection(double x2, double y2) {
-		double x = x2 - this.x_pos;
-		double y = y2 - this.y_pos;
+		double x = x2 - this.positionX;
+		double y = y2 - this.positionY;
 		
 		if ((x == 0D) || (y == 0D)) {
 			return;
@@ -32,19 +36,19 @@ class Ball extends Obj {
 			return;
 		}
 		
-		this.x_vel = (x / hyp * this.speed);
-		this.y_vel = (y / hyp * this.speed);
+		this.velocityX = (x / hyp * this.speed);
+		this.velocityY = (y / hyp * this.speed);
 	}
 	
 	public void update(int counter) {
-		this.x_pos += this.x_vel;
-		this.y_pos += this.y_vel;
+		this.positionX += this.velocityX;
+		this.positionY += this.velocityY;
 		
-		if ((this.x_pos - this.radius <= 0D) || (this.x_pos + this.radius >= BallGame.dim.width)) {
-			this.x_vel *= -1.0D;
+		if ((this.positionX - this.radius <= 0D) || (this.positionX + this.radius >= BallGame.dim.width)) {
+			this.velocityX *= -1.0D;
 		}
-		if ((this.y_pos - this.radius <= 0D) || (this.y_pos + this.radius >= BallGame.dim.height - 50)) {
-			this.y_vel *= -1.0D;
+		if ((this.positionY - this.radius <= 0D) || (this.positionY + this.radius >= BallGame.dim.height - 50)) {
+			this.velocityY *= -1.0D;
 		}
 		
 		if (counter == 100) {
@@ -58,7 +62,7 @@ class Ball extends Obj {
 	
 	public void draw(Graphics g) {
 		g.setColor(this.color);
-		g.fillOval((int)this.x_pos - this.radius, (int)this.y_pos - this.radius, 2 * this.radius, 2 * this.radius);
+		g.fillOval((int)this.positionX - this.radius, (int)this.positionY - this.radius, 2 * this.radius, 2 * this.radius);
 	}
 	
 	public double getSpeed() {
@@ -84,9 +88,4 @@ class Ball extends Obj {
 	public boolean isAlive() {
 		return this.isAlive;
 	}
-	
-	private double y_vel;
-	private double speed = 1D;
-	private int health;
-	private boolean isAlive = true;
 }
