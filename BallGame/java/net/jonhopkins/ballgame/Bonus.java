@@ -13,12 +13,12 @@ class Bonus extends Obj {
 	public Bonus(double x, double y, Color c, String s) {
 		super(x, y, c);
 		
-		if (s == "health") {
+		if (s.equals("health")) {
 			this.healthBoost = ((int)(Math.random() * 10.0D) + 10);
-		} else if (s == "speed") {
+		} else if (s.equals("speed")) {
 			this.speedBoost += Math.random() * 1.7D + 0.3D;
 			this.timer += (int)(Math.random() * 60.0D) + 40;
-		} else if (s == "ultimatebonus") {
+		} else if (s.equals("ultimatebonus")) {
 			this.healthBoost = 100;
 			this.speedBoost += 2.0D;
 			this.timer += 150;
