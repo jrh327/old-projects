@@ -3,32 +3,15 @@ package net.jonhopkins.ballgame;
 import java.awt.Color;
 
 class Bonus extends Obj {
-	enum BonusType {
-		HEALTH,
-		SPEED,
-		ULTIMATE
-	}
-	
-	private int timer = 0;
+	protected int timer = 0;
 	private int onFieldTimer = 0;
-	private double speedBoost = 0D;
-	private int healthBoost = 0;
+	protected double speedBoost = 0D;
+	protected int healthBoost = 0;
 	private boolean isActive = false;
 	private boolean isOnField = false;
 	
-	public Bonus(double x, double y, Color c, BonusType type) {
+	public Bonus(double x, double y, Color c) {
 		super(x, y, c);
-		
-		if (type == BonusType.HEALTH) {
-			this.healthBoost = ((int)(Math.random() * 10.0D) + 10);
-		} else if (type == BonusType.SPEED) {
-			this.speedBoost += Math.random() * 1.7D + 0.3D;
-			this.timer += (int)(Math.random() * 60.0D) + 40;
-		} else if (type == BonusType.ULTIMATE) {
-			this.healthBoost = 100;
-			this.speedBoost += 2.0D;
-			this.timer += 150;
-		}
 		
 		this.radius = 5;
 		this.isOnField = true;

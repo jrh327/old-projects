@@ -8,8 +8,6 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-import net.jonhopkins.ballgame.Bonus.BonusType;
-
 public class BallGame extends Applet implements Runnable, MouseMotionListener {
 	private static final long serialVersionUID = 4478108492322269640L;
 	private Player player;
@@ -31,7 +29,7 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		
 		this.player = new Player();
 		this.enemy = new Enemy(player);
-		this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.orange, BonusType.SPEED);
+		this.bonus = new SpeedBonus(getRandomXPos(), getRandomYPos());
 		this.bonus.setOnField(false);
 		
 		addMouseMotionListener(this);
@@ -64,12 +62,12 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 				if ((int)(Math.random() * 250.0D) == 37) {
 					int b = (int)(Math.random() * 20.0D);
 					
-					if ((b >= 0) && (b < 10)) {
-						this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.orange, BonusType.SPEED);
-					} else if ((b > 11) && (b <= 20)) {
-						this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.red, BonusType.HEALTH);
-					} else if (b == 11) {
-						this.bonus = new Bonus(getRandomXPos(), getRandomYPos(), Color.yellow, BonusType.ULTIMATE);
+					if (b < 10) {
+						this.bonus = new SpeedBonus(getRandomXPos(), getRandomYPos());
+					} else if (b > 10) {
+						this.bonus = new HealthBonus(getRandomXPos(), getRandomYPos());
+					} else {
+						this.bonus = new UltimateBonus(getRandomXPos(), getRandomYPos());
 					}
 				}
 			} else if (this.bonus.isOnField()) {
