@@ -7,8 +7,8 @@ import java.util.Calendar;
  
 public class MandelbrotJulia extends Applet implements MouseMotionListener {
 	private static final long serialVersionUID = 1L;
-	private int width;
-	private int height;
+	private final int WIDTH;
+	private final int HEIGHT;
 	private Graphics bg;
 	private Image backbuffer;
 	private double kReal = -0.796;
@@ -16,23 +16,26 @@ public class MandelbrotJulia extends Applet implements MouseMotionListener {
 	private boolean julia;
 	private double minReal = -2.0;
 	private double maxReal = 1.0;
-	private double minImaginary = -1.5;
-	private double maxImaginary;
+	private final double MIN_IMAGINARY = -1.5;
+	private final double MAX_IMAGINARY;
 	private double realFactor;
-	private double imaginaryFactor;
+	private final double IMAGINARY_FACTOR;
 	private long lastDrawTime = Calendar.getInstance().getTimeInMillis();
 	
+	public MandelbrotJulia() {
+		WIDTH = 1000;
+		HEIGHT = 500;
+		MAX_IMAGINARY = MIN_IMAGINARY + (maxReal - minReal) * HEIGHT / (WIDTH / 2);
+		realFactor = (maxReal - minReal) / (WIDTH / 2 - 1);
+		IMAGINARY_FACTOR = (MAX_IMAGINARY - MIN_IMAGINARY) / (HEIGHT - 1);
+	}
+	
 	public void init() {
-		setSize(1000, 500);
-		width = getSize().width;
-		height = getSize().height;
-		maxImaginary = minImaginary + (maxReal - minReal) * height / (width / 2);
-		realFactor = (maxReal - minReal) / (width / 2 - 1);
-		imaginaryFactor = (maxImaginary - minImaginary) / (height - 1);
-		backbuffer = createImage(width, height);
+		setSize(WIDTH, HEIGHT);
+		backbuffer = createImage(WIDTH, HEIGHT);
 		bg = backbuffer.getGraphics();
 		bg.setColor(Color.black);
-		bg.fillRect(0, 0, width, height);
+		bg.fillRect(0, 0, WIDTH, HEIGHT);
 		setBackground(Color.black);
 		julia = false;
 		draw();
@@ -50,17 +53,17 @@ public class MandelbrotJulia extends Applet implements MouseMotionListener {
 		int minX;
 		int maxX;
 		if (julia) {
-			minX = width / 2;
-			maxX = width;
+			minX = WIDTH / 2;
+			maxX = WIDTH;
 		} else {
 			minX = 0;
-			maxX = width / 2;
+			maxX = WIDTH / 2;
 		}
 		bg.setColor(Color.black);
-		bg.fillRect(minX, 0, maxX - 1, height);
+		bg.fillRect(minX, 0, maxX - 1, HEIGHT);
 		
-		for (int y = 0; y < height; y++) {
-			double cImaginary = maxImaginary - y * imaginaryFactor;
+		for (int y = 0; y < HEIGHT; y++) {
+			double cImaginary = MAX_IMAGINARY - y * IMAGINARY_FACTOR;
 			for (int x = minX; x < maxX; x++) {
 				double cReal = minReal + (x - minX) * realFactor;
 				
@@ -101,7 +104,7 @@ public class MandelbrotJulia extends Applet implements MouseMotionListener {
 			} else if (strKImaginary.length() < 6) {
 				strKImaginary = strKImaginary.concat(("000000").substring(0, 6 - strKImaginary.length()));
 			}
-			bg.drawString("Julia set - K=" + strKReal + (kImaginary >= 0 ? "+" : "-") + strKImaginary + "i", width / 2 + 20, 10);
+			bg.drawString("Julia set - K=" + strKReal + (kImaginary >= 0 ? "+" : "-") + strKImaginary + "i", WIDTH / 2 + 20, 10);
 		} else {
 			bg.drawString("Mandelbrot set", 20, 10);
 		}
@@ -112,16 +115,16 @@ public class MandelbrotJulia extends Applet implements MouseMotionListener {
 	public void mouseMoved(MouseEvent me) {
 		if (Calendar.getInstance().getTimeInMillis() - lastDrawTime < 20) return;
 		synchronized(backbuffer) {
-			if (me.getX() <= width / 2) {
+			if (me.getX() <= WIDTH / 2) {
 				minReal = -2.0;
 				maxReal = 1.0;
-				realFactor = (maxReal - minReal) / (width / 2 - 1);
+				realFactor = (maxReal - minReal) / (WIDTH / 2 - 1);
 				kReal = minReal + me.getX() * realFactor;
-				kImaginary = maxImaginary - me.getY() * imaginaryFactor;
+				kImaginary = MAX_IMAGINARY - me.getY() * IMAGINARY_FACTOR;
 				julia = true;
 				minReal = -1.5;
 				maxReal = 1.5;
-				realFactor = (maxReal - minReal) / (width / 2 - 1);
+				realFactor = (maxReal - minReal) / (WIDTH / 2 - 1);
 				draw();
 			}
 		}
