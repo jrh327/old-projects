@@ -3,7 +3,6 @@ package net.jonhopkins.mandelbrot;
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Calendar;
  
 public class MandelbrotJulia extends Applet implements MouseMotionListener {
 	private static final long serialVersionUID = 1L;
@@ -20,7 +19,7 @@ public class MandelbrotJulia extends Applet implements MouseMotionListener {
 	private final double MAX_IMAGINARY;
 	private double realFactor;
 	private final double IMAGINARY_FACTOR;
-	private long lastDrawTime = Calendar.getInstance().getTimeInMillis();
+	private long lastDrawTime;
 	
 	public MandelbrotJulia() {
 		WIDTH = 1000;
@@ -39,7 +38,7 @@ public class MandelbrotJulia extends Applet implements MouseMotionListener {
 		setBackground(Color.black);
 		julia = false;
 		draw();
-		lastDrawTime = Calendar.getInstance().getTimeInMillis();
+		lastDrawTime = System.currentTimeMillis();
 		addMouseMotionListener(this);
 	}
 	
@@ -112,26 +111,29 @@ public class MandelbrotJulia extends Applet implements MouseMotionListener {
 		repaint();
 	}
 	
-	public void mouseMoved(MouseEvent me) {
-		if (Calendar.getInstance().getTimeInMillis() - lastDrawTime < 20) return;
-		synchronized(backbuffer) {
-			if (me.getX() <= WIDTH / 2) {
+	public void mouseMoved(MouseEvent mouseEvent) {
+		if (System.currentTimeMillis() - lastDrawTime < 20) {
+			return;
+		}
+		
+		synchronized (backbuffer) {
+			if (mouseEvent.getX() <= WIDTH / 2) {
 				minReal = -2.0;
 				maxReal = 1.0;
 				realFactor = (maxReal - minReal) / (WIDTH / 2 - 1);
-				kReal = minReal + me.getX() * realFactor;
-				kImaginary = MAX_IMAGINARY - me.getY() * IMAGINARY_FACTOR;
+				kReal = minReal + mouseEvent.getX() * realFactor;
+				kImaginary = MAX_IMAGINARY - mouseEvent.getY() * IMAGINARY_FACTOR;
 				julia = true;
 				minReal = -1.5;
 				maxReal = 1.5;
 				realFactor = (maxReal - minReal) / (WIDTH / 2 - 1);
 				draw();
+				lastDrawTime = System.currentTimeMillis();
 			}
 		}
-		lastDrawTime = Calendar.getInstance().getTimeInMillis();
 	}
 	
-	public void mouseDragged(MouseEvent me) { }
+	public void mouseDragged(MouseEvent mouseEvent) { }
 	
 	public void update(Graphics g) {
 		g.drawImage(backbuffer, 0, 0, this);
