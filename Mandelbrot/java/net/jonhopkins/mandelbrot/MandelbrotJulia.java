@@ -1,9 +1,12 @@
 package net.jonhopkins.mandelbrot;
- 
-import java.applet.*;
-import java.awt.*;
-import java.awt.event.*;
- 
+
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
 public class MandelbrotJulia extends Applet implements MouseMotionListener {
 	private static final long serialVersionUID = 1L;
 	private final int WIDTH;
