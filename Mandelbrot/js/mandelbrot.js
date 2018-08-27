@@ -6,74 +6,76 @@
 	var WIDTH = 1000;
 	var HEIGHT = 500;
 
-	var K_real = -0.796;
-	var K_imaginary = -0.1353;
+	var kReal = -0.796;
+	var kImaginary = -0.1353;
 	var julia;
 	var drawing;
-	var MinReal = -2.0;
-	var MaxReal = 1.0;
-	var MinImaginary = -1.5;
-	var MaxImaginary;
-	var Real_factor;
-	var Imaginary_factor;
+	var minReal = -2.0;
+	var maxReal = 1.0;
+	var minImaginary = -1.5;
+	var maxImaginary;
+	var realFactor;
+	var imaginaryFactor;
 
 	canvas.width = WIDTH;
 	canvas.height = HEIGHT;
 	canvas.addEventListener("mousemove", mouseMoved, false);
 
 	function draw() {
-		var MaxIterations = 25;
+		var maxIterations = 25;
 		
-		var minx;
-		var maxx;
+		var minX;
+		var maxX;
 		if (julia) {
-			minx = WIDTH / 2; maxx = WIDTH;
+			minX = WIDTH / 2;
+			maxX = WIDTH;
 		} else {
-			minx = 0; maxx = WIDTH / 2;
+			minX = 0;
+			maxX = WIDTH / 2;
 		}
 		
 		context.clearRect(WIDTH / 2, 0, WIDTH, HEIGHT);
-		var imgData = context.getImageData(minx, 0, WIDTH / 2, HEIGHT);
+		var imgData = context.getImageData(minX, 0, WIDTH / 2, HEIGHT);
 		
 		var y;
 		var x;
 		var iteration;
-		var c_imaginary;
-		var c_real;
-		var Z_imaginary;
-		var Z_real;
-		var Z_imaginary2;
-		var Z_real2;
+		var cImaginary;
+		var cReal;
+		var zImaginary;
+		var zReal;
+		var zImaginary2;
+		var zReal2;
 		for (y = 0; y < HEIGHT; y += 1) {
-			c_imaginary = MaxImaginary - y * Imaginary_factor;
-			for (x = minx; x < maxx; x += 1) {
-				c_real = MinReal + (x - minx) * Real_factor;
+			cImaginary = maxImaginary - y * imaginaryFactor;
+			for (x = minX; x < maxX; x += 1) {
+				cReal = minReal + (x - minX) * realFactor;
 				
-				Z_real = c_real;
-				Z_imaginary = c_imaginary;
-				for (iteration = 0; iteration < MaxIterations; iteration += 1) {
-					Z_real2 = Z_real * Z_real;
-					Z_imaginary2 = Z_imaginary * Z_imaginary;
-					if (Z_real2 + Z_imaginary2 > 4) {
+				zReal = cReal;
+				zImaginary = cImaginary;
+				for (iteration = 0; iteration < maxIterations; iteration += 1) {
+					zReal2 = zReal * zReal;
+					zImaginary2 = zImaginary * zImaginary;
+					if (zReal2 + zImaginary2 > 4) {
 						break;
 					}
-					Z_imaginary = 2 * Z_real * Z_imaginary
-							+ (julia ? K_imaginary : c_imaginary);
-					Z_real = Z_real2 - Z_imaginary2 + (julia ? K_real : c_real);
+					zImaginary = 2 * zReal * zImaginary
+							+ (julia ? kImaginary : cImaginary);
+					zReal = zReal2 - zImaginary2 + (julia ? kReal : cReal);
 				}
-				if (iteration < MaxIterations) {
+				if (iteration < maxIterations) {
 					var pixel = (y * (WIDTH / 2) + x) * 4;
 					var r;
 					var g;
 					var b;
-					if (iteration < MaxIterations / 2) {
-						r = parseInt(255 / MaxIterations / 2 * iteration + 1);
+					if (iteration < maxIterations / 2) {
+						r = parseInt(255 / maxIterations / 2 * iteration + 1);
 						g = 0;
 						b = 0;
 					} else {
 						r = 255;
-						g = parseInt(255 / MaxIterations * iteration + 1);
-						b = parseInt(255 / MaxIterations * iteration + 1);
+						g = parseInt(255 / maxIterations * iteration + 1);
+						b = parseInt(255 / maxIterations * iteration + 1);
 					}
 					
 					imgData.data[pixel] = r;
@@ -82,27 +84,27 @@
 					imgData.data[pixel + 3] = 255;
 				}
 			}
-			context.putImageData(imgData, minx, 0);
+			context.putImageData(imgData, minX, 0);
 		}
 		
 		context.fillStyle = "rgb(255, 255, 255)";
 		var zeroes = "000000";
 		if (julia) {
-			var k_real = String(K_real);
-			if (k_real.length > 6) {
-				k_real = k_real.substring(0, 6);
-			} else if (k_real.length < 6) {
-				k_real = k_real + zeroes.substring(0, 6 - k_real.length);
+			var strKReal = String(kReal);
+			if (strKReal.length > 6) {
+				strKReal = strKReal.substring(0, 6);
+			} else if (strKReal.length < 6) {
+				strKReal = strKReal + zeroes.substring(0, 6 - strKReal.length);
 			}
-			var k_imaginary = String(Math.abs(K_imaginary));
-			if (k_imaginary.length > 6) {
-				k_imaginary = k_imaginary.substring(0, 6);
-			} else if (k_imaginary.length < 6) {
-				k_imaginary = k_imaginary
-						+ zeroes.substring(0, 6 - k_imaginary.length);
+			var strKImaginary = String(Math.abs(kImaginary));
+			if (strKImaginary.length > 6) {
+				strKImaginary = strKImaginary.substring(0, 6);
+			} else if (strKImaginary.length < 6) {
+				strKImaginary = strKImaginary
+						+ zeroes.substring(0, 6 - strKImaginary.length);
 			}
-			context.fillText("Julia set - K=" + k_real
-					+ (K_imaginary >= 0 ? "+" : "-") + k_imaginary + "i",
+			context.fillText("Julia set - K=" + strKReal
+					+ (kImaginary >= 0 ? "+" : "-") + strKImaginary + "i",
 					WIDTH / 2 + 20, 10);
 		} else {
 			context.fillText("Mandelbrot set", 20, 10);
@@ -118,24 +120,24 @@
 		var ypos = (e.pageY - canvas.offsetTop);
 		if (xpos <= WIDTH / 2) {
 			drawing = true;
-			MinReal = -2.0;
-			MaxReal = 1.0;
-			Real_factor = (MaxReal - MinReal) / (WIDTH / 2 - 1);
-			K_real = MinReal + xpos * Real_factor;
-			K_imaginary = MaxImaginary - ypos * Imaginary_factor;
+			minReal = -2.0;
+			maxReal = 1.0;
+			realFactor = (maxReal - minReal) / (WIDTH / 2 - 1);
+			kReal = minReal + xpos * realFactor;
+			kImaginary = maxImaginary - ypos * imaginaryFactor;
 			julia = true;
-			MinReal = -1.5;
-			MaxReal = 1.5;
-			Real_factor = (MaxReal - MinReal) / (WIDTH / 2 - 1);
+			minReal = -1.5;
+			maxReal = 1.5;
+			realFactor = (maxReal - minReal) / (WIDTH / 2 - 1);
 			draw();
 			drawing = false;
 		}
 	}
 
 	function init() {
-		MaxImaginary = MinImaginary + (MaxReal - MinReal) * HEIGHT / (WIDTH / 2);
-		Real_factor = (MaxReal - MinReal) / (WIDTH / 2 - 1);
-		Imaginary_factor = (MaxImaginary - MinImaginary) / (HEIGHT - 1);
+		maxImaginary = minImaginary + (maxReal - minReal) * HEIGHT / (WIDTH / 2);
+		realFactor = (maxReal - minReal) / (WIDTH / 2 - 1);
+		imaginaryFactor = (maxImaginary - minImaginary) / (HEIGHT - 1);
 
 		julia = false;
 		drawing = false;
