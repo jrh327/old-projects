@@ -59,8 +59,8 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 			this.enemy.update(counter);
 			
 			if ((!this.bonus.isOnField()) && (!this.bonus.isActive())) {
-				if ((int)(Math.random() * 250.0D) == 37) {
-					int b = (int)(Math.random() * 20.0D);
+				if ((int)(Math.random() * 250.0) == 37) {
+					int b = (int)(Math.random() * 20.0);
 					
 					if (b < 10) {
 						this.bonus = new SpeedBonus(getRandomXPos(), getRandomYPos());

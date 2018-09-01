@@ -7,7 +7,7 @@ public class UltimateBonus extends Bonus {
 		super(x, y, Color.yellow);
 		
 		this.healthBoost = 100;
-		this.speedBoost += 2.0D;
+		this.speedBoost += 2.0;
 		this.timer += 150;
 	}
 }

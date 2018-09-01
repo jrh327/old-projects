@@ -40,6 +40,6 @@ class Obj {
 		double distance = Math.pow(
 				Math.pow(this.positionX - o2.positionX, 2.0) + Math.pow(this.positionY - o2.positionY, 2.0),
 				0.5);
-		return distance < this.radius + o2.radius * 0.9D;
+		return distance < this.radius + o2.radius * 0.9;
 	}
 }

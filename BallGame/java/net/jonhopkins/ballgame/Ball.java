@@ -6,7 +6,7 @@ import java.awt.Graphics;
 class Ball extends Obj {
 	private double velocityX;
 	private double velocityY;
-	private double speed = 1D;
+	private double speed = 1.0;
 	private int health;
 	private boolean isAlive = true;
 	
@@ -15,7 +15,7 @@ class Ball extends Obj {
 		
 		this.radius = 20;
 		
-		double direction = Math.random() * 6.283185307179586D;
+		double direction = Math.random() * Math.PI * 2;
 		this.velocityX = (Math.cos(direction) * this.speed);
 		this.velocityY = (Math.sin(direction) * this.speed);
 		
@@ -26,13 +26,13 @@ class Ball extends Obj {
 		double x = x2 - this.positionX;
 		double y = y2 - this.positionY;
 		
-		if ((x == 0D) || (y == 0D)) {
+		if ((x == 0.0) || (y == 0.0)) {
 			return;
 		}
 		
-		double hyp = Math.pow(Math.pow(x, 2.0D) + Math.pow(y, 2.0D), 0.5D);
+		double hyp = Math.pow(Math.pow(x, 2.0) + Math.pow(y, 2.0), 0.5);
 		
-		if (hyp == 0D) {
+		if (hyp == 0.0) {
 			return;
 		}
 		
@@ -44,11 +44,11 @@ class Ball extends Obj {
 		this.positionX += this.velocityX;
 		this.positionY += this.velocityY;
 		
-		if ((this.positionX - this.radius <= 0D) || (this.positionX + this.radius >= BallGame.dim.width)) {
-			this.velocityX *= -1.0D;
+		if ((this.positionX - this.radius <= 0.0) || (this.positionX + this.radius >= BallGame.dim.width)) {
+			this.velocityX *= -1.0;
 		}
-		if ((this.positionY - this.radius <= 0D) || (this.positionY + this.radius >= BallGame.dim.height - 50)) {
-			this.velocityY *= -1.0D;
+		if ((this.positionY - this.radius <= 0.0) || (this.positionY + this.radius >= BallGame.dim.height - 50)) {
+			this.velocityY *= -1.0;
 		}
 		
 		if (counter == 100) {

@@ -5,7 +5,7 @@ import java.awt.Color;
 class Bonus extends Obj {
 	protected int timer = 0;
 	private int onFieldTimer = 0;
-	protected double speedBoost = 0D;
+	protected double speedBoost = 0.0;
 	protected int healthBoost = 0;
 	private boolean isActive = false;
 	private boolean isOnField = false;
@@ -30,7 +30,7 @@ class Bonus extends Obj {
 	
 	public void deactivate(Ball b) {
 		b.incSpeed(-this.speedBoost);
-		this.speedBoost = 0D;
+		this.speedBoost = 0.0;
 		this.healthBoost = 0;
 		this.isActive = false;
 	}
