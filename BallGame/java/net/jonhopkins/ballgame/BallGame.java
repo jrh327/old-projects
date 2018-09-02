@@ -29,7 +29,7 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 		
 		this.player = new Player();
 		this.enemy = new Enemy(player);
-		this.bonus = new SpeedBonus(getRandomXPos(), getRandomYPos());
+		this.bonus = new SpeedBonus();
 		this.bonus.setOnField(false);
 		
 		addMouseMotionListener(this);
@@ -63,11 +63,11 @@ public class BallGame extends Applet implements Runnable, MouseMotionListener {
 					int b = (int)(Math.random() * 20.0);
 					
 					if (b < 10) {
-						this.bonus = new SpeedBonus(getRandomXPos(), getRandomYPos());
+						this.bonus = new SpeedBonus();
 					} else if (b > 10) {
-						this.bonus = new HealthBonus(getRandomXPos(), getRandomYPos());
+						this.bonus = new HealthBonus();
 					} else {
-						this.bonus = new UltimateBonus(getRandomXPos(), getRandomYPos());
+						this.bonus = new UltimateBonus();
 					}
 				}
 			} else if (this.bonus.isOnField()) {

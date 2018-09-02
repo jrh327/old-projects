@@ -10,6 +10,10 @@ class Bonus extends Obj {
 	private boolean isActive = false;
 	private boolean isOnField = false;
 	
+	public Bonus(Color c) {
+		this(BallGame.getRandomXPos(), BallGame.getRandomYPos(), c);
+	}
+	
 	public Bonus(double x, double y, Color c) {
 		super(x, y, c);
 		

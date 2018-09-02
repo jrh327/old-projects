@@ -3,8 +3,8 @@ package net.jonhopkins.ballgame;
 import java.awt.Color;
 
 public class UltimateBonus extends Bonus {
-	public UltimateBonus(double x, double y) {
-		super(x, y, Color.yellow);
+	public UltimateBonus() {
+		super(Color.yellow);
 		
 		this.healthBoost = 100;
 		this.speedBoost += 2.0;
